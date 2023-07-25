@@ -1,8 +1,5 @@
-
-
 from pathlib import Path
 import os
-from re import DEBUG
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,11 +8,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG")
 
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 
 
 ALLOWED_HOSTS = []
