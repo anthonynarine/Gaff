@@ -22,7 +22,7 @@ class ServerSerializer(serializers.ModelSerializer):
         model = Server
         exclude = ("member",)
         
-    def get_num_members(self, obj):
+    def get_num_members(self, obj) -> int:
         """
         This method is used to get the value of the 'num_members' field, if it is present.
         'num_members' is not a model field but is added in a view using annotate().
