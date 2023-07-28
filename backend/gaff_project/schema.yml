@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Gaff
+  version: 1.0.0
+  description: allows users to exchange real-time text messages
+paths: {}
+components: {}
