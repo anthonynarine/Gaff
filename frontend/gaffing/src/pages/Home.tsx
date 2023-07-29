@@ -1,9 +1,11 @@
+import { Box, CssBaseline } from "@mui/material"
 
 function Home() {
   return (
-    <>
-      <h2>Home page under construction</h2>
-    </>
+    <Box sx={{display: "flex"}}>
+      <CssBaseline />
+      Home page under construction
+    </Box>
   )
 }
 
