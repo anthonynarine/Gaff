@@ -5,6 +5,9 @@ from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from django.dispatch import receiver
 
+from .utils import scale_down_image
+from .validators import validate_icon_image_size, validate_image_file_extension
+
 
 def category_icon_upload_path(instance, filename):
     """
@@ -47,8 +50,7 @@ def channel_icon_upload_path(instance, filename):
     return f"channel/{instance.id}/channel_icons/{filename}"
 
 
-
-def channel_banner_upload_path(instance, filename):
+def channel_banner_img_upload_path(instance, filename):
     """
     Determines the upload path for channel banners.
 
@@ -69,42 +71,48 @@ class Category(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    icon = models.FileField(upload_to=category_icon_upload_path, null=True, blank=True)
+    icon = models.FileField(
+        upload_to=category_icon_upload_path,
+        null=True,
+        blank=True,
+        validators=[validate_icon_image_size, validate_image_file_extension],
+    )
 
     def save(self, *args, **kwargs):
         """
-Overwrites the default save method to handle deletion of the old icon
-and banner when new ones are uploaded.
+        Overwrites the default save method to handle deletion of the old icon
+        and banner when new ones are uploaded.
 
-First, the function checks if the instance already has an ID. The presence of an ID indicates
-that this is an existing Channel in the database, not a new instance being created.
-This check is crucial because we only want to attempt deletion of the previous icon and banner for
-an existing Channel that is being updated.
+        First, the function checks if the instance already has an ID. The presence of an ID indicates
+        that this is an existing Channel in the database, not a new instance being created.
+        This check is crucial because we only want to attempt deletion of the previous icon and banner for
+        an existing Channel that is being updated.
 
-If the Channel is already in the database, the function fetches the current Channel
-instance from the database using Django's get_object_or_404 function. This function will
-return the Channel object if it exists, and if it doesn't, it will raise a Http404 exception.
+        If the Channel is already in the database, the function fetches the current Channel
+        instance from the database using Django's get_object_or_404 function. This function will
+        return the Channel object if it exists, and if it doesn't, it will raise a Http404 exception.
 
-The function then compares the existing icon and banner with the new ones. If they differ, it means a
-new icon or banner has been uploaded. When a new icon or banner is uploaded, the function deletes the old
-icon or banner file from the filesystem. It's important to note that the `delete` method of a
-FileField takes an optional `save` argument. By default, `save` is `True`, and it will save
-the model after deleting the associated file. In this case, however, we pass `save=False`
-to the `delete` method to avoid an unnecessary additional database write, as we are about
-to save the model ourselves in the next step.
+        The function then compares the existing icon and banner with the new ones. If they differ, it means a
+        new icon or banner has been uploaded. When a new icon or banner is uploaded, the function deletes the old
+        icon or banner file from the filesystem. It's important to note that the `delete` method of a
+        FileField takes an optional `save` argument. By default, `save` is `True`, and it will save
+        the model after deleting the associated file. In this case, however, we pass `save=False`
+        to the `delete` method to avoid an unnecessary additional database write, as we are about
+        to save the model ourselves in the next step.
 
-Finally, the original save method is called through the use of `super()` to save the
-changes (including the new icon and banner) to the database.
+        Finally, the original save method is called through the use of `super()` to save the
+        changes (including the new icon and banner) to the database.
 
-Args:
-    *args: Variable length argument list.
-    **kwargs: Arbitrary keyword arguments.
-"""
-
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments."""
         if self.id:
             existing = get_object_or_404(Category, id=self.id)
             if existing.icon != self.icon:
                 existing.icon.delete(save=False)
+
+        if self.icon:
+            scale_down_image(self.icon.path)
 
         super(Category, self).save(*args, **kwargs)
 
@@ -151,10 +159,11 @@ class Server(models.Model):
         Category, on_delete=models.CASCADE, related_name="server_category"
     )
     description = models.CharField(max_length=250, blank=True, null=True)
-    member = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     def __str__(self):
-        return f"{self.name}-{self.id}"
+
+        return f"{self.name} (ID: {self.id})"
 
 
 class Channel(models.Model):
@@ -170,10 +179,18 @@ class Channel(models.Model):
     server = models.ForeignKey(
         Server, on_delete=models.CASCADE, related_name="channel_server"
     )
-    banner = models.ImageField(
-        upload_to=channel_banner_upload_path, blank=True, null=True
+    banner_img = models.ImageField(
+        upload_to=channel_banner_img_upload_path,
+        blank=True,
+        null=True,
+        validators=[validate_image_file_extension],
     )
-    icon = models.ImageField(upload_to=channel_icon_upload_path, blank=True, null=True)
+    icon = models.ImageField(
+        upload_to=channel_icon_upload_path,
+        blank=True,
+        null=True,
+        validators=[validate_icon_image_size, validate_image_file_extension],
+    )
 
     def save(self, *args, **kwargs):
         """
@@ -209,9 +226,13 @@ class Channel(models.Model):
             existing = get_object_or_404(Channel, id=self.id)
             if existing.icon != self.icon:
                 existing.icon.delete(save=False)
-            if existing.banner != self.banner:
-                existing.banner.delete(save=False)
-            
+            if existing.banner_img != self.banner_img:
+                existing.banner_img.delete(save=False)
+                
+        if self.icon:
+            scale_down_image(self.icon.path)
+        if self.banner_img:
+            scale_down_image(self.banner_img.path)
 
         super(Channel, self).save(*args, **kwargs)
 
@@ -222,25 +243,25 @@ def delete_files(sender, instance, **kwargs):
     This receiver function is triggered right before a `Server` instance is deleted.
     It deletes any associated files for specified fields from the file system.
 
-    We use a Python set to store the field names that we want to check. A set is a built-in Python 
-    data structure that can store multiple items in a single variable. We use a set here for two main 
+    We use a Python set to store the field names that we want to check. A set is a built-in Python
+    data structure that can store multiple items in a single variable. We use a set here for two main
     reasons:
-    
-    1. **Readability and maintainability**: If we need to check more field names in the future, 
+
+    1. **Readability and maintainability**: If we need to check more field names in the future,
     we can simply add them to the set, rather than extending a potentially long line of `or` conditions.
-    2. **Efficiency**: Checking membership in a set is generally faster than checking membership in a list 
-    or a tuple, especially for large collections. This won't make a noticeable difference in this case, 
+    2. **Efficiency**: Checking membership in a set is generally faster than checking membership in a list
+    or a tuple, especially for large collections. This won't make a noticeable difference in this case,
     but it's a good practice to follow when dealing with larger sets of data.
 
-    For each field in the instance's fields, the function checks if the field's name is in the set 
-    of names. If it is, the function tries to get the value of that field (i.e., the associated file) 
-    using the `getattr` function. If the field has a value, the function deletes the file from the 
+    For each field in the instance's fields, the function checks if the field's name is in the set
+    of names. If it is, the function tries to get the value of that field (i.e., the associated file)
+    using the `getattr` function. If the field has a value, the function deletes the file from the
     file system by calling the `delete` method on the field's value.
 
-    The `delete` method of a `FileField` (or an `ImageField`) in Django deletes the file from the file 
-    system. The method takes an optional `save` argument, which defaults to `True`. This argument 
-    determines whether to save the model after deleting the associated file. However, since the instance 
-    is about to be deleted from the database, there's no need to save it. Therefore, we pass `save=False` 
+    The `delete` method of a `FileField` (or an `ImageField`) in Django deletes the file from the file
+    system. The method takes an optional `save` argument, which defaults to `True`. This argument
+    determines whether to save the model after deleting the associated file. However, since the instance
+    is about to be deleted from the database, there's no need to save it. Therefore, we pass `save=False`
     to avoid an unnecessary database operation.
 
     Args:
@@ -255,6 +276,61 @@ def delete_files(sender, instance, **kwargs):
             if file:
                 file.delete(save=False)
 
-
     def __str__(self):
         return self.name
+    
+    
+    
+    
+    
+                         #   SUMMARY
+"""Upload Path Functions: category_icon_upload_path, channel_icon_upload_path,
+and channel_banner_img_upload_path are responsible for defining the upload
+paths for each file related to a category or channel.
+
+Category Class: Defines the Category model with fields for the name, description,
+and icon. You're also overwriting the default save method to handle the deletion
+of the old icon when a new one is uploaded, and scaling down the image size if 
+there's a new icon. You have also defined a receiver for pre_delete signal to
+delete the icon file from the filesystem when the Category instance is deleted.
+
+Server Class: Defines the Server model with fields for the name, owner, category,
+description, and members.
+
+Channel Class: Defines the Channel model with fields for the name, owner,
+topic, server, banner image, and icon. Similar to the Category model, you're 
+overwriting the default save method to handle the deletion of the old icon and
+banner image when new ones are uploaded, and scaling down the image size if
+there's a new icon or banner image.
+
+pre_delete signal receiver for Server: You have a receiver function that gets
+triggered before a Server instance is deleted. It loops over specific fields
+(in this case, "icon" and "banner") and deletes the associated files from the
+filesystem.
+
+You've done a great job with your Django models, ensuring that file paths
+are properly handled and unnecessary files are deleted when they are replaced
+or their associated model instance is deleted. This is good practice to avoid 
+accumulation of unused files in your storage.
+
+One potential improvement you could make would be to add docstrings for the 
+Server and Channel classes, similar to what you have done for the Category
+class. This can help others understand what these models represent and how 
+they are structured.
+
+Also, for the pre_delete signal receiver for the Server model, you've used
+the sender as "server.Server". While this should work, it might be better to 
+use the actual Server model class as the sender for consistency and to ensure
+that the receiver function gets correctly hooked to the Server model's pre_delete
+signal.
+
+Finally, make sure you have defined the scale_down_image function in your
+.utils module, as it is called in your overridden save methods but not defined
+
+within this code. And remember to import and configure the models in your 
+Django admin site if you want to manage them via the Django admin interface.
+"""
+
+
+
+
