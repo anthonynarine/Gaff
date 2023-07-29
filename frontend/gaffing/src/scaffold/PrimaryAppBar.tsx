@@ -1,4 +1,6 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu"
+
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 
@@ -18,12 +20,17 @@ function PrimaryAppBar() {
           minHeight: theme.primaryAppBar.height,
         }}
       >
+        <Box>
+          <IconButton>
+            <MenuIcon />
+          </IconButton>
+        </Box>
         <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { fontWeight: 700, letterSpacing:"0.5px" } }}
+            sx={{ display: { fontWeight: 700, letterSpacing: "0.5px" } }}
           >
             LeWeGaff
           </Typography>
