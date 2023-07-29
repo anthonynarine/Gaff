@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Typography, Box, IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu"
+import MenuIcon from "@mui/icons-material/Menu";
 
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
@@ -9,6 +9,7 @@ function PrimaryAppBar() {
   return (
     <AppBar
       sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 2,
         backgroundColor: theme.palette.background.default,
         borderBottom: `1px solid ${theme.palette.divider}`,
       }}
@@ -20,8 +21,13 @@ function PrimaryAppBar() {
           minHeight: theme.primaryAppBar.height,
         }}
       >
-        <Box>
-          <IconButton>
+        <Box sx={{ display: { xs: "block", sm: "none" } }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            sx={{ mr: 1 }}
+          >
             <MenuIcon />
           </IconButton>
         </Box>
