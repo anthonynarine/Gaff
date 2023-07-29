@@ -6,6 +6,7 @@ from .serializer import ServerSerializer
 from rest_framework.response import Response
 from django.db.models import Count
 from .schema import server_list_docs
+from typing import Dict, Any
 
 class ServerListViewSet(viewsets.ViewSet):
     """
@@ -17,7 +18,7 @@ class ServerListViewSet(viewsets.ViewSet):
     queryset = Server.objects.all()
 
     @server_list_docs
-    def list(self, request):
+    def list(self, request)-> Dict[str, Any]:
         """
         Retrieve a list of servers based on provided query parameters.
 

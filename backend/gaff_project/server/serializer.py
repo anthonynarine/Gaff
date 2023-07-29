@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Category, Server, Channel
+from typing import Dict, Any
 
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,7 +33,7 @@ class ServerSerializer(serializers.ModelSerializer):
         else:
             return None
     
-    def to_representation(self, instance):
+    def to_representation(self, instance) -> Dict[str, Any]:
         """
         Overriding the default to_representation method to conditionally include 'num_members'.
         """
