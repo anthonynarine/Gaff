@@ -15,37 +15,54 @@ function PrimaryDraw() {
   // State to control the drawer's open/close state
   const [open, setOpen] = useState(false);
 
-  const openedMixin = () => ({
-    transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.easeIn,
-        duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflow: "hidden",
-  });
+ /**
+ * Returns the styles to apply when the drawer is open.
+ *
+ * @returns {object} The object containing the open styles for the drawer.
+ */
+const openedMixin = () => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.easeIn,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflow: "hidden",
+});
 
-  const closedMixin = () => ({
-    transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflow: "hidden",
-    width: theme.primaryDraw.closed,
-  });
+/**
+ * Returns the styles to apply when the drawer is closed.
+ *
+ * @returns {object} The object containing the closed styles for the drawer.
+ */
+const closedMixin = () => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.easeIn,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflow: "hidden",
+  width: theme.primaryDraw.closed,
+});
 
-
-  const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
-    width: theme.primaryDraw.width,
-    whiteSpace: "nowrap",
-    boxSizing: "border-box",
-    ...(open && {
-        ...openedMixin(),
-        "& .MuiDrawer-paper": openedMixin(),
-    }),
-    ...(!open && {
-        ...openedMixin(),
-        "& .MuiDrawer-paper": closedMixin(),
-    })
-  }));
+/**
+ * A custom styled MuiDrawer component that handles the appearance of the drawer
+ * based on its open or closed state.
+ *
+ * @param {object} theme - The Material-UI theme object.
+ * @param {boolean} open - Indicates whether the drawer is currently open or closed.
+ * @returns {object} The object containing the styles for the Drawer component.
+ */
+const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
+  width: theme.primaryDraw.width,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(),
+    "& .MuiDrawer-paper": openedMixin(),
+  }),
+  ...(!open && {
+    ...openedMixin(),
+    "& .MuiDrawer-paper": closedMixin(),
+  }),
+}));
   
 
 

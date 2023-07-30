@@ -13,6 +13,12 @@ declare module "@mui/material/styles" {
             closed: number;
         };
     }
+    interface Theme {
+        secondaryDraw: {
+            width: number;
+
+        };
+    }
     // Extend the ThemeOptions to allow configuring the "primaryAppBar" property during theme creation
     interface ThemeOptions {
         primaryAppBar?: {
@@ -21,6 +27,9 @@ declare module "@mui/material/styles" {
         primaryDraw: {
             width: number;
             closed: number;
+        };
+        secondaryDraw: {
+            width: number;
         };  
     }
 }
@@ -38,6 +47,9 @@ export const createMuiTheme = () => {
         primaryDraw: {
             width: 240,
             closed: 70
+        },
+        secondaryDraw: {
+            width: 240
         },
         components: {
             MuiAppBar: {
