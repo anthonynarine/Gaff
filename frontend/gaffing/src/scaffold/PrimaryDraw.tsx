@@ -1,4 +1,4 @@
-import { Drawer, Box, Typography, useMediaQuery, styled } from "@mui/material";
+import { Box, Typography, useMediaQuery, styled } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import MuiDrawer from "@mui/material/Drawer";
@@ -59,7 +59,7 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
     "& .MuiDrawer-paper": openedMixin(),
   }),
   ...(!open && {
-    ...openedMixin(),
+    ...closedMixin(),
     "& .MuiDrawer-paper": closedMixin(),
   }),
 }));
