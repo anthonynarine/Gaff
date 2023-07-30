@@ -7,11 +7,21 @@ declare module "@mui/material/styles" {
             height: number;
         };
     }
+    interface Theme {
+        primaryDraw: {
+            width: number;
+            closed: number;
+        };
+    }
     // Extend the ThemeOptions to allow configuring the "primaryAppBar" property during theme creation
     interface ThemeOptions {
         primaryAppBar?: {
             height?: number;
         };
+        primaryDraw: {
+            width: number;
+            closed: number;
+        };  
     }
 }
 
@@ -23,7 +33,11 @@ export const createMuiTheme = () => {
             fontFamily: ['IBM Plex Sans', "sans-serif"].join(","), // Custom font family for the whole application
         },
         primaryAppBar: {
-            height: 60, // Height value for the "primaryAppBar" property
+            height: 50, // Height value for the "primaryAppBar" property
+        },
+        primaryDraw: {
+            width: 240,
+            closed: 70
         },
         components: {
             MuiAppBar: {

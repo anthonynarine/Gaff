@@ -1,5 +1,6 @@
 import { Box, CssBaseline } from "@mui/material"
 import PrimaryAppBar from "../scaffold/PrimaryAppBar"
+import PrimaryDraw from "../scaffold/PrimaryDraw"
 
 
 function Home() {
@@ -8,7 +9,7 @@ function Home() {
     <Box sx={{display: "flex"}}>
       <CssBaseline />
       <PrimaryAppBar />
-      Home page under construction
+      <PrimaryDraw></PrimaryDraw>
     </Box>
   )
 }
