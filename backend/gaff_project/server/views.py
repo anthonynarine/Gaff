@@ -18,7 +18,7 @@ class ServerListViewSet(viewsets.ViewSet):
     Attributes:
         queryset: The initial queryset of Server objects from the database.
     """
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     queryset = Server.objects.all()
 
     @server_list_docs
