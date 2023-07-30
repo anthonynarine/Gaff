@@ -1,8 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { responsiveFontSizes, useTheme } from "@mui/material/styles";
 
-import axios from "axios";
-
 /**
  * A reusable secondary drawer component that displays a vertical list of paragraphs.
  * This component is typically used for additional content or navigation in wider views.
@@ -12,13 +10,6 @@ import axios from "axios";
 function SecondaryDraw() {
   // Get the current theme using the useTheme() hook from Material-UI.
   const theme = useTheme();
-
-  axios.get("http://localhost:8000/api/server/select/?category").then(response => {
-    console.log(response.data)
-  })
-  .catch((error)=>{
-    console.log(error)
-  });
 
   return (
     <Box

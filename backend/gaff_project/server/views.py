@@ -2,19 +2,23 @@ from django.shortcuts import render
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from .models import Server
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from .serializer import ServerSerializer
 from rest_framework.response import Response
 from django.db.models import Count
 from .schema import server_list_docs
 from typing import Dict, Any
 
+
 class ServerListViewSet(viewsets.ViewSet):
     """
+    
     A ViewSet for listing or retrieving servers.
 
     Attributes:
         queryset: The initial queryset of Server objects from the database.
     """
+    permission_classes = [IsAuthenticated]
     queryset = Server.objects.all()
 
     @server_list_docs
