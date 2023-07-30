@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { responsiveFontSizes, useTheme } from "@mui/material/styles";
 
 /**
  * A reusable secondary drawer component that displays a vertical list of paragraphs.

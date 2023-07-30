@@ -115,6 +115,10 @@ class Category(models.Model):
             scale_down_image(self.icon.path)
 
         super(Category, self).save(*args, **kwargs)
+        
+    def __str__(self):
+     return self.name
+
 
 
 @receiver(models.signals.pre_delete, sender="server.Category")
@@ -235,6 +239,10 @@ class Channel(models.Model):
             scale_down_image(self.banner_img.path)
 
         super(Channel, self).save(*args, **kwargs)
+    
+    def __str__(self):
+     return self.name
+
 
 
 @receiver(models.signals.pre_delete, sender="server.Server")

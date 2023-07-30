@@ -26,15 +26,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # local
     "account",
-    "server", 
+    "server",
     # 3rd party
-     "drf_spectacular",
-     "rest_framework", 
+    "drf_spectacular",
+    "rest_framework",
+    "corsheaders",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -63,14 +70,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "gaff_project.wsgi.application"
 
 
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -89,7 +94,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -99,10 +103,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-
 STATIC_URL = "static/"
 
-#..Added bot heeded to create a media folder (handling images)
+# ..Added bot heeded to create a media folder (handling images)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "media/"
 
@@ -110,26 +113,23 @@ MEDIA_URL = "media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-
-#... ..ADDED....
+# ... ..ADDED....
 AUTH_USER_MODEL = "account.Account"
 
 
-#... ..ADDED....
+# ... ..ADDED....
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        
-    ], 
+    ],
 }
 
 
-#....ADDED....
+# ....ADDED....
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Gaff',
-    'DESCRIPTION': 'allows users to exchange real-time text messages',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': True,
-
+    "TITLE": "Gaff",
+    "DESCRIPTION": "allows users to exchange real-time text messages",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": True,
 }

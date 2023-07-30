@@ -21,7 +21,7 @@ class ServerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Server
-        exclude = ("member",)
+        exclude = ("members",)
         
     def get_num_members(self, obj) -> int:
         """
