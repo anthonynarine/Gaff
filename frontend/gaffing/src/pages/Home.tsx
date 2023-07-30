@@ -1,6 +1,7 @@
 import { Box, CssBaseline } from "@mui/material"
 import PrimaryAppBar from "../scaffold/PrimaryAppBar"
 import PrimaryDraw from "../scaffold/PrimaryDraw"
+import SecondaryDraw from "../scaffold/SecondaryDraw"
 
 
 function Home() {
@@ -10,6 +11,7 @@ function Home() {
       <CssBaseline />
       <PrimaryAppBar />
       <PrimaryDraw></PrimaryDraw>
+      <SecondaryDraw />
     </Box>
   )
 }
