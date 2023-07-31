@@ -17,7 +17,8 @@ import imp
 from django.contrib import admin
 from django.db import router
 from django.urls import path
-from server.views import ServerListViewSet
+from server.views import ServerListViewSet, CategoryListViewSet
+
 #drf-spectacular
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
@@ -28,6 +29,7 @@ from django.conf.urls.static import static
 router = DefaultRouter()
 # Register
 router.register("api/server/select", ServerListViewSet)
+router.register("api/server/category", CategoryListViewSet)
 
 
 urlpatterns = [

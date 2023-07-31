@@ -42,7 +42,7 @@ const PopularChannels: React.FC<PropsFromPrimaryDraw> = ({ open }) => {
   }, []);
 
   useEffect(() => {
-    console.log(dataCRUD)
+    console.log("Servers", dataCRUD)
   }, [dataCRUD]);
 
   return (

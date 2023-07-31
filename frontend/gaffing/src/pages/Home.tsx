@@ -4,6 +4,7 @@ import PrimaryDraw from "../scaffold/PrimaryDraw";
 import SecondaryDraw from "../scaffold/SecondaryDraw";
 import MainContent from "../scaffold/MainContent";
 import PopularChannels from "../components/PrimaryDraw/PopularChannels";
+import ExploreCategories from "../components/SecondaryDraw/ExploreCategories";
 
 function Home() {
   return (
@@ -11,9 +12,11 @@ function Home() {
       <CssBaseline />
       <PrimaryAppBar />
       <PrimaryDraw>
-        <PopularChannels open/>
+        <PopularChannels open={false} />
       </PrimaryDraw>
-      <SecondaryDraw />
+      <SecondaryDraw>
+        <ExploreCategories />
+      </SecondaryDraw>
       <MainContent />
     </Box>
   );

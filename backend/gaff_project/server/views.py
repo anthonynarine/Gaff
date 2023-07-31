@@ -1,4 +1,7 @@
 from http.client import responses
+from multiprocessing import managers
+import re
+from tkinter import TRUE
 from django.shortcuts import render
 import drf_spectacular
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
@@ -13,8 +16,13 @@ from typing import Dict, Any
 from drf_spectacular.utils import extend_schema
 
 
-class CategoryListView(viewsets.ViewSet):
-    queryset = Category.objects.all.order_by("-name")
+class CategoryListViewSet(viewsets.ViewSet):
+    queryset = Category.objects.all().order_by("-name")
+    
+    @extend_schema(responses=CategorySerializer)
+    def list(self, request):
+        serializer = CategorySerializer(self.queryset, many=True)
+        return Response(serializer.data)
     
 
 
