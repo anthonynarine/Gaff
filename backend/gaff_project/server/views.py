@@ -1,13 +1,21 @@
+from http.client import responses
 from django.shortcuts import render
+import drf_spectacular
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
-from .models import Server
+from .models import Category, Server
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .serializer import ServerSerializer
+from .serializer import ServerSerializer, CategorySerializer
 from rest_framework.response import Response
 from django.db.models import Count
 from .schema import server_list_docs
 from typing import Dict, Any
+from drf_spectacular.utils import extend_schema
+
+
+class CategoryListView(viewsets.ViewSet):
+    queryset = Category.objects.all.order_by("-name")
+    
 
 
 class ServerListViewSet(viewsets.ViewSet):
@@ -20,6 +28,12 @@ class ServerListViewSet(viewsets.ViewSet):
     """
     # permission_classes = [IsAuthenticated]
     queryset = Server.objects.all()
+    
+    @extend_schema(responses=CategorySerializer)
+    def list(self, request)-> Dict[str, Any]:
+        serilizer = CategorySerializer(self.queryset, many=True)
+        return Response(serilizer.data)
+        
 
     @server_list_docs
     def list(self, request)-> Dict[str, Any]:

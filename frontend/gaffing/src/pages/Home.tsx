@@ -3,7 +3,7 @@ import PrimaryAppBar from "../scaffold/PrimaryAppBar";
 import PrimaryDraw from "../scaffold/PrimaryDraw";
 import SecondaryDraw from "../scaffold/SecondaryDraw";
 import MainContent from "../scaffold/MainContent";
-import PopularChannels from "../components/PopularChannels";
+import PopularChannels from "../components/PrimaryDraw/PopularChannels";
 
 function Home() {
   return (
