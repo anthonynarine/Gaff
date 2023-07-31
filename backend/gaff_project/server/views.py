@@ -79,6 +79,7 @@ class ServerListViewSet(viewsets.ViewSet):
             self.queryset = self.queryset.filter(id=by_serverid)
             if not self.queryset.exists():
                 raise ValidationError(detail=f"Server with id {by_serverid} not found")
+            
 
         # Serialize the queryset and return the serialized data
         serializer = ServerSerializer(self.queryset, many=True)

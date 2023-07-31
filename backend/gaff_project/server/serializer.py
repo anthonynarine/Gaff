@@ -18,7 +18,7 @@ class ServerSerializer(serializers.ModelSerializer):
     """
     num_members = serializers.SerializerMethodField()
     channel_server = ChannelSerializer(many=True)
-    
+    category = serializers.StringRelatedField() # returns the name instead of the
     class Meta:
         model = Server
         exclude = ("members",)

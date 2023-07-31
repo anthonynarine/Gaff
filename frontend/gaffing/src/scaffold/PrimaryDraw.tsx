@@ -1,10 +1,9 @@
 import { Box, useMediaQuery, styled } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { useState, useEffect, ReactNode } from "react";
+import React, { useState, useEffect } from "react";
 import MuiDrawer from "@mui/material/Drawer";
 
 import DrawerToggle from "../components/PrimaryDrawer/DrawerToggle";
-import PopularChannels from "../components/PopularChannels";
 
 type Props = {
   children: React.ReactElement<ChildProps>;

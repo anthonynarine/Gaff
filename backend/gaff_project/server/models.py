@@ -111,8 +111,8 @@ class Category(models.Model):
             if existing.icon != self.icon:
                 existing.icon.delete(save=False)
 
-        if self.icon:
-            scale_down_image(self.icon.path)
+        # if self.icon:
+        #     scale_down_image(self.icon.path)
 
         super(Category, self).save(*args, **kwargs)
 
@@ -213,10 +213,10 @@ class Server(models.Model):
             if existing.banner_img != self.banner_img:
                 existing.banner_img.delete(save=False)
 
-        if self.icon:
-            scale_down_image(self.icon.path)
-        if self.banner_img:
-            scale_down_image(self.banner_img.path)
+        # if self.icon:
+        #     scale_down_image(self.icon.path)
+        # if self.banner_img:
+        #     scale_down_image(self.banner_img.path)
 
         super(Server, self).save(*args, **kwargs)
 
@@ -225,7 +225,7 @@ class Server(models.Model):
 
 
     @receiver(models.signals.pre_delete, sender="server.Server")
-    def delete_files(sender, instance, **kwargs):
+    def server_delete_files(sender, instance, **kwargs):
         """
         This receiver function is triggered right before a `Server` instance is deleted.
         It deletes any associated files for specified fields from the file system.

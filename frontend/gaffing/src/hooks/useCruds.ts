@@ -9,6 +9,7 @@ interface IuseCrud<T> {
     isLoading: boolean;
 }
 
+// useCrud will take initialData and the api url
 const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
     const jwtAxios = useAxiosWithInterceptor();
     const [dataCRUD, setDataCRUD] = useState<T[]>(initialData)
@@ -18,8 +19,9 @@ const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
     const fetchData = async () =>{
         setIsLoading(true)
         try {
-            const response = await jwtAxios.get(`${BASE_URL}${apiURL}`, {})
-            const data = response.data
+            // const response = await jwtAxios.get(`${BASE_URL}${apiURL}`, {})
+            // const data = response.data
+            const { data } = await jwtAxios.get(`${BASE_URL}${apiURL}`, {})
             setDataCRUD(data)
             setError(null)
             setIsLoading(false)
