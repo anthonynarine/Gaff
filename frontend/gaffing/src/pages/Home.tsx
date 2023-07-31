@@ -1,21 +1,22 @@
-import { Box, CssBaseline } from "@mui/material"
-import PrimaryAppBar from "../scaffold/PrimaryAppBar"
-import PrimaryDraw from "../scaffold/PrimaryDraw"
-import SecondaryDraw from "../scaffold/SecondaryDraw"
-import MainContent from "../scaffold/MainContent"
-
+import { Box, CssBaseline } from "@mui/material";
+import PrimaryAppBar from "../scaffold/PrimaryAppBar";
+import PrimaryDraw from "../scaffold/PrimaryDraw";
+import SecondaryDraw from "../scaffold/SecondaryDraw";
+import MainContent from "../scaffold/MainContent";
+import PopularChannels from "../components/PrimaryDraw/PopularChannels";
 
 function Home() {
-
   return (
-    <Box sx={{display: "flex"}}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <PrimaryAppBar />
-      <PrimaryDraw></PrimaryDraw>
+      <PrimaryDraw>
+        <PopularChannels open/>
+      </PrimaryDraw>
       <SecondaryDraw />
-      < MainContent />
+      <MainContent />
     </Box>
-  )
+  );
 }
 
-export default Home
+export default Home;

@@ -1,6 +1,12 @@
+from pyexpat import model
 from rest_framework import serializers
 from .models import Category, Server, Channel
 from typing import Dict, Any
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
 
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +24,7 @@ class ServerSerializer(serializers.ModelSerializer):
     """
     num_members = serializers.SerializerMethodField()
     channel_server = ChannelSerializer(many=True)
-    
+    category = serializers.StringRelatedField() # returns the name instead of the
     class Meta:
         model = Server
         exclude = ("members",)

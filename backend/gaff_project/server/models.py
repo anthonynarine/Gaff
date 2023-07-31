@@ -36,7 +36,7 @@ def category_icon_upload_path(instance, filename):
     return f"category/{instance.id}/category_icon/{filename}"
 
 
-def channel_icon_upload_path(instance, filename):
+def server_icon_upload_path(instance, filename):
     """
     Determines the upload path for channel icons.
 
@@ -47,10 +47,10 @@ def channel_icon_upload_path(instance, filename):
     Returns:
         str: The upload path for the file.
     """
-    return f"channel/{instance.id}/channel_icons/{filename}"
+    return f"server/{instance.id}/server_icons/{filename}"
 
 
-def channel_banner_img_upload_path(instance, filename):
+def server_banner_img_upload_path(instance, filename):
     """
     Determines the upload path for channel banners.
 
@@ -61,7 +61,7 @@ def channel_banner_img_upload_path(instance, filename):
     Returns:
         str: The upload path for the file.
     """
-    return f"channel/{instance.id}/channel_banners/{filename}"
+    return f"server/{instance.id}/server_banners/{filename}"
 
 
 class Category(models.Model):
@@ -111,39 +111,38 @@ class Category(models.Model):
             if existing.icon != self.icon:
                 existing.icon.delete(save=False)
 
-        if self.icon:
-            scale_down_image(self.icon.path)
+        # if self.icon:
+        #     scale_down_image(self.icon.path)
 
         super(Category, self).save(*args, **kwargs)
-        
+
     def __str__(self):
-     return self.name
+        return self.name
 
 
+    @receiver(models.signals.pre_delete, sender="server.Category")
+    def category_delete_files(sender, instance, **kwargs):
+        """
+        Receiver for a `pre_delete` signal on the `Category` model.
 
-@receiver(models.signals.pre_delete, sender="server.Category")
-def category_delete_files(sender, instance, **kwargs):
-    """
-    Receiver for a `pre_delete` signal on the `Category` model.
+        This function is triggered right before a `Category` instance is deleted. Its main role is to
+        delete the associated icon file from the file system, if one exists.
 
-    This function is triggered right before a `Category` instance is deleted. Its main role is to
-    delete the associated icon file from the file system, if one exists.
+        The function checks if the `Category` instance has an associated icon by trying to access
+        the `icon` attribute. If the `icon` attribute has a value (i.e., a file), it calls the `delete`
+        method on it, which deletes the file from the file system.
 
-    The function checks if the `Category` instance has an associated icon by trying to access
-    the `icon` attribute. If the `icon` attribute has a value (i.e., a file), it calls the `delete`
-    method on it, which deletes the file from the file system.
+        The `delete` method takes an optional `save` argument which defaults to `True`. However, since
+        we are in the process of deleting the `Category` instance from the database, there is no need
+        to save it. Hence, we pass `save=False` to avoid an unnecessary database operation.
 
-    The `delete` method takes an optional `save` argument which defaults to `True`. However, since
-    we are in the process of deleting the `Category` instance from the database, there is no need
-    to save it. Hence, we pass `save=False` to avoid an unnecessary database operation.
-
-    Args:
-        sender (Model): The model class that sent the signal.
-        instance (Model instance): The actual instance being deleted.
-        **kwargs: Arbitrary keyword arguments.
-    """
-    if instance.icon:
-        instance.icon.delete(save=False)
+        Args:
+            sender (Model): The model class that sent the signal.
+            instance (Model instance): The actual instance being deleted.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        if instance.icon:
+            instance.icon.delete(save=False)
 
     def __str__(self):
         return self.name
@@ -164,33 +163,14 @@ class Server(models.Model):
     )
     description = models.CharField(max_length=250, blank=True, null=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL)
-
-    def __str__(self):
-
-        return f"{self.name} (ID: {self.id})"
-
-
-class Channel(models.Model):
-    """
-    Channel within a server in the system.
-    """
-
-    name = models.CharField(max_length=50)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="channel_owner"
-    )
-    topic = models.CharField(max_length=100)
-    server = models.ForeignKey(
-        Server, on_delete=models.CASCADE, related_name="channel_server"
-    )
     banner_img = models.ImageField(
-        upload_to=channel_banner_img_upload_path,
+        upload_to=server_banner_img_upload_path,
         blank=True,
         null=True,
         validators=[validate_image_file_extension],
     )
     icon = models.ImageField(
-        upload_to=channel_icon_upload_path,
+        upload_to=server_icon_upload_path,
         blank=True,
         null=True,
         validators=[validate_icon_image_size, validate_image_file_extension],
@@ -227,71 +207,86 @@ class Channel(models.Model):
         """
 
         if self.id:
-            existing = get_object_or_404(Channel, id=self.id)
+            existing = get_object_or_404(Server, id=self.id)
             if existing.icon != self.icon:
                 existing.icon.delete(save=False)
             if existing.banner_img != self.banner_img:
                 existing.banner_img.delete(save=False)
-                
-        if self.icon:
-            scale_down_image(self.icon.path)
-        if self.banner_img:
-            scale_down_image(self.banner_img.path)
 
-        super(Channel, self).save(*args, **kwargs)
-    
-    def __str__(self):
-     return self.name
+        # if self.icon:
+        #     scale_down_image(self.icon.path)
+        # if self.banner_img:
+        #     scale_down_image(self.banner_img.path)
 
-
-
-@receiver(models.signals.pre_delete, sender="server.Server")
-def delete_files(sender, instance, **kwargs):
-    """
-    This receiver function is triggered right before a `Server` instance is deleted.
-    It deletes any associated files for specified fields from the file system.
-
-    We use a Python set to store the field names that we want to check. A set is a built-in Python
-    data structure that can store multiple items in a single variable. We use a set here for two main
-    reasons:
-
-    1. **Readability and maintainability**: If we need to check more field names in the future,
-    we can simply add them to the set, rather than extending a potentially long line of `or` conditions.
-    2. **Efficiency**: Checking membership in a set is generally faster than checking membership in a list
-    or a tuple, especially for large collections. This won't make a noticeable difference in this case,
-    but it's a good practice to follow when dealing with larger sets of data.
-
-    For each field in the instance's fields, the function checks if the field's name is in the set
-    of names. If it is, the function tries to get the value of that field (i.e., the associated file)
-    using the `getattr` function. If the field has a value, the function deletes the file from the
-    file system by calling the `delete` method on the field's value.
-
-    The `delete` method of a `FileField` (or an `ImageField`) in Django deletes the file from the file
-    system. The method takes an optional `save` argument, which defaults to `True`. This argument
-    determines whether to save the model after deleting the associated file. However, since the instance
-    is about to be deleted from the database, there's no need to save it. Therefore, we pass `save=False`
-    to avoid an unnecessary database operation.
-
-    Args:
-        sender (Model): The model class that sent the signal.
-        instance (Model instance): The actual instance being deleted.
-        **kwargs: Arbitrary keyword arguments.
-    """
-    field_names_to_check = {"icon", "banner"}
-    for field in instance._meta.fields:
-        if field.name in field_names_to_check:
-            file = getattr(instance, field.name)
-            if file:
-                file.delete(save=False)
+        super(Server, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
-    
-    
-    
-    
-    
-                         #   SUMMARY
+
+
+    @receiver(models.signals.pre_delete, sender="server.Server")
+    def server_delete_files(sender, instance, **kwargs):
+        """
+        This receiver function is triggered right before a `Server` instance is deleted.
+        It deletes any associated files for specified fields from the file system.
+
+        We use a Python set to store the field names that we want to check. A set is a built-in Python
+        data structure that can store multiple items in a single variable. We use a set here for two main
+        reasons:
+
+        1. **Readability and maintainability**: If we need to check more field names in the future,
+        we can simply add them to the set, rather than extending a potentially long line of `or` conditions.
+        2. **Efficiency**: Checking membership in a set is generally faster than checking membership in a list
+        or a tuple, especially for large collections. This won't make a noticeable difference in this case,
+        but it's a good practice to follow when dealing with larger sets of data.
+
+        For each field in the instance's fields, the function checks if the field's name is in the set
+        of names. If it is, the function tries to get the value of that field (i.e., the associated file)
+        using the `getattr` function. If the field has a value, the function deletes the file from the
+        file system by calling the `delete` method on the field's value.
+
+        The `delete` method of a `FileField` (or an `ImageField`) in Django deletes the file from the file
+        system. The method takes an optional `save` argument, which defaults to `True`. This argument
+        determines whether to save the model after deleting the associated file. However, since the instance
+        is about to be deleted from the database, there's no need to save it. Therefore, we pass `save=False`
+        to avoid an unnecessary database operation.
+
+        Args:
+            sender (Model): The model class that sent the signal.
+            instance (Model instance): The actual instance being deleted.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        field_names_to_check = {"icon", "banner"}
+        for field in instance._meta.fields:
+            if field.name in field_names_to_check:
+                file = getattr(instance, field.name)
+                if file:
+                    file.delete(save=False)
+
+    def __str__(self):
+        return f"{self.name} (ID: {self.id})"
+
+
+class Channel(models.Model):
+    """
+    Channel within a server in the system.
+    """
+
+    name = models.CharField(max_length=50)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="channel_owner"
+    )
+    topic = models.CharField(max_length=100)
+    server = models.ForeignKey(
+        Server, on_delete=models.CASCADE, related_name="channel_server"
+    )
+
+    def __str__(self):
+        return self.name
+
+        #   SUMMARY
+
+
 """Upload Path Functions: category_icon_upload_path, channel_icon_upload_path,
 and channel_banner_img_upload_path are responsible for defining the upload
 paths for each file related to a category or channel.
@@ -338,7 +333,3 @@ Finally, make sure you have defined the scale_down_image function in your
 within this code. And remember to import and configure the models in your 
 Django admin site if you want to manage them via the Django admin interface.
 """
-
-
-
-
