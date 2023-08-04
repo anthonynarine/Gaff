@@ -25,7 +25,9 @@ interface Server {
   name: string;
   category: string;
   icon: string;
-  banner: string;
+  banner_img: string;
+  // banner: string; 
+  // a lesson was learned here about matching model fieldnames and when rendering
 }
 
 function ExploreServers() {
@@ -37,7 +39,8 @@ function ExploreServers() {
 
   useEffect(() => {
     fetchData();
-  }, [categoryName]); // triggers a refresh if category name chagnes
+    
+  }, [categoryName]); // triggers a refresh if category name changes
 
   return (
     <div>
@@ -88,7 +91,9 @@ function ExploreServers() {
           Recommended Channels
         </Typography>
         <Grid container spacing={{ xs: 0, sm: 2 }}>
-          {dataCRUD.map((server) => (
+          {dataCRUD.map((server) => {
+            console.log(`${MEDIA_URL}${server.banner_img}`);
+            return (
             <Grid item key={server.id} xs={12} sm={6} md={4} lg={3}>
               <Card
                 sx={{
@@ -105,9 +110,13 @@ function ExploreServers() {
                 >
                   <CardMedia
                     component="img"
-                    image={server.banner ? server.banner : "https://source.unsplash.com/random/" }
+                    image={
+                      server.banner_img
+                        ? `${MEDIA_URL}${server.banner_img}`
+                        : ""
+                    }
                     alt="random"
-                    sx={{ display: { xs: "none", sm: "block" } }}
+                    sx={{ display: "block" }}
                   />
                   <CardContent
                     sx={{ flexGrow: 1, p: 0, "&:last-child": { paddingBottom: 0 } }}
@@ -131,7 +140,7 @@ function ExploreServers() {
                                 textOverflow: "ellipsis",
                                 overflow: "hidden",
                                 whiteSpace: "nowrap",
-                                fontWeight: 700, 
+                                fontWeight: 700,
                               }}
                             >
                               {server.name}
@@ -155,8 +164,9 @@ function ExploreServers() {
                   </CardContent>
                 </Link>
               </Card>
+                     
             </Grid>
-          ))}
+          )})}
         </Grid>
       </Container>
     </div>
