@@ -54,8 +54,8 @@ function ExploreServers() {
               display: {
                 sm: "block",
                 fontWeight: 700,
-                fontSize: "48px",
                 letterSpacing: "-2px",
+                textTransform: "capitalize",
               },
               textAlign: { xs: "center", sm: "left" },
             }}
@@ -73,7 +73,6 @@ function ExploreServers() {
               display: {
                 sm: "block",
                 fontWeight: 700,
-                fontSize: "48px",
                 letterSpacing: "-1px",
               },
               textAlign: { xs: "center", sm: "left" },
@@ -102,6 +101,8 @@ function ExploreServers() {
                   flexDirection: "column",
                   boxShadow: "none",
                   backgroundImage: "none",
+                  borderRadius: 0,
+
                 }}
               >
                 <Link
@@ -113,10 +114,10 @@ function ExploreServers() {
                     image={
                       server.banner_img
                         ? `${MEDIA_URL}${server.banner_img}`
-                        : ""
+                        : "http://source.unsplash.com/random"
                     }
                     alt="random"
-                    sx={{ display: "block" }}
+                    sx={{ display: { xs: "none", sm: "block" } }}
                   />
                   <CardContent
                     sx={{ flexGrow: 1, p: 0, "&:last-child": { paddingBottom: 0 } }}
@@ -163,8 +164,7 @@ function ExploreServers() {
                     </List>
                   </CardContent>
                 </Link>
-              </Card>
-                     
+              </Card>                  
             </Grid>
           )})}
         </Grid>

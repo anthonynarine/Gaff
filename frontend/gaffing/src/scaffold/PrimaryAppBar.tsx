@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, Box, IconButton, Drawer, useMediaQuery } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  IconButton,
+  Drawer,
+  useMediaQuery,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
-
+import ExploreCategories from "../components/SecondaryDraw/ExploreCategories";
 
 // Constants
 const NUM_DRAWER_PARAGRAPHS = 100;
@@ -15,7 +23,7 @@ const PrimaryAppBar = () => {
   // Theme
   const theme = useTheme();
 
-   // Check if the screen is small (up to "sm" breakpoint)
+  // Check if the screen is small (up to "sm" breakpoint)
   const isSmallScreen = useMediaQuery(theme.breakpoints.up("sm"));
 
   // Effect to handle drawer visibility on small screens
@@ -30,6 +38,18 @@ const PrimaryAppBar = () => {
   const toggleDrawer = (visible: boolean) => () => {
     setDrawerVisibility(visible);
   };
+
+  //....MAKE THIS INTO IT'S OWN COMPONENT ON REFACTOR
+  const list = () => (
+    <Box
+      sx={{ paddingTop: `${theme.primaryAppBar.height}px`, minWidth: 200 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <ExploreCategories />
+    </Box>
+  );
 
   return (
     <>
@@ -63,11 +83,7 @@ const PrimaryAppBar = () => {
           {/* Drawer */}
           <Drawer anchor="left" open={isDrawerVisible} onClose={toggleDrawer(false)}>
             {/* Drawer Content */}
-            {[...Array(NUM_DRAWER_PARAGRAPHS)].map((_, i) => (
-              <Typography key={i} paragraph>
-                {i + 1}
-              </Typography>
-            ))}
+            {list()}
           </Drawer>
 
           {/* App Title */}
@@ -88,4 +104,3 @@ const PrimaryAppBar = () => {
 };
 
 export default PrimaryAppBar;
-
