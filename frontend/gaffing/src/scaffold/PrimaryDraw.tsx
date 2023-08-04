@@ -5,13 +5,46 @@ import MuiDrawer from "@mui/material/Drawer";
 
 import DrawerToggle from "../components/DrawerToggle";
 
+/**
+ * ChildProps type definition.
+ * Represents the props of the child component.
+ * 
+ * An equivalent interface for this type could look like this:
+ * @example
+ * ```
+ * interface ChildProps {
+ *   open: boolean;
+ * }
+ * ```
+ */
+type ChildProps = {
+  /** 
+   * open state determines if the child component should be open or not.
+   */
+  open: boolean;
+};
+
+/**
+ * Props type definition.
+ * Represents the props of the parent component.
+ * 
+ * An equivalent interface for this type could look like this:
+ * @example
+ * ```
+ * interface Props {
+ *   children: React.ReactElement<ChildProps>;
+ * }
+ * ```
+ */
 type Props = {
+  /** 
+   * children should be React elements with properties conforming to ChildProps type.
+   */
   children: React.ReactElement<ChildProps>;
 };
 
-type ChildProps = {
-  open: boolean;
-};
+
+
 
 const PrimaryDraw: React.FC<Props> = function({ children }) {
 // Alt setup

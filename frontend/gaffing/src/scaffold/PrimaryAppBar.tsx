@@ -13,9 +13,6 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import ExploreCategories from "../components/SecondaryDraw/ExploreCategories";
 
-// Constants
-const NUM_DRAWER_PARAGRAPHS = 100;
-
 const PrimaryAppBar = () => {
   // State for the drawer visibility
   const [isDrawerVisible, setDrawerVisibility] = useState(false);
