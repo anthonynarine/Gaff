@@ -42,7 +42,7 @@ const PopularChannels: React.FC<PropsFromPrimaryDraw> = ({ open }) => {
   }, []);
 
   useEffect(() => {
-    console.log(dataCRUD)
+    console.log("Servers", dataCRUD)
   }, [dataCRUD]);
 
   return (
@@ -64,16 +64,16 @@ const PopularChannels: React.FC<PropsFromPrimaryDraw> = ({ open }) => {
         </Typography>
       </Box>
       <List>
-        {dataCRUD.map((item) => (
-          <ListItem key={item.id} disableGutters sx={{ display: "block" }} dense={true}>
+        {dataCRUD.map((server) => (
+          <ListItem key={server.id} disableGutters sx={{ display: "block" }} dense={true}>
             <Link
-              to={`/server/${item.id}`}
+              to={`/server/${server.id}`}
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <ListItemButton sx={{ minHeight: 0 }}>
                 <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
                   <ListItemAvatar sx={{ minWidth: "50px" }}>
-                    <Avatar alt="Server Icon" src={`${MEDIA_URL}${item.icon}`} />
+                    <Avatar alt="Server Icon" src={`${MEDIA_URL}${server.icon}`} />
                   </ListItemAvatar>
                 </ListItemIcon>
                 <ListItemText
@@ -88,7 +88,7 @@ const PopularChannels: React.FC<PropsFromPrimaryDraw> = ({ open }) => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {item.name}
+                      {server.name}
                     </Typography>
                   }
                   secondary={
@@ -96,7 +96,7 @@ const PopularChannels: React.FC<PropsFromPrimaryDraw> = ({ open }) => {
                       variant="body2"
                       sx={{ fontWeight: 500, lineHeight: 1.2, color: "textSecondary" }}
                     >
-                      {item.category}
+                      {server.category}
                     </Typography>
                   }
                   sx={{ opacity: open ? 1 : 0 }}

@@ -39,7 +39,11 @@ export const createMuiTheme = () => {
     // Create the default theme and customize it by providing the "primaryAppBar" property
     let theme = createTheme({
         typography: {
-            fontFamily: ['IBM Plex Sans', "sans-serif"].join(","), // Custom font family for the whole application
+            fontFamily: ['IBM Plex Sans', "sans-serif"].join(","),
+            body2:{
+                fontWeight: 600,
+                letterSpacing: "0.5px",
+            }, // Custom font family for the whole application
         },
         primaryAppBar: {
             height: 50, // Height value for the "primaryAppBar" property

@@ -13,8 +13,10 @@ type ChildProps = {
   open: boolean;
 };
 
-function PrimaryDraw(props: Props) {
-  const { children } = props;
+const PrimaryDraw: React.FC<Props> = function({ children }) {
+// Alt setup
+// function PrimaryDraw(props: Props) {
+//   const { children } = props;
   const theme = useTheme();
 
   // Check if the screen is below 600px (sm breakpoint)

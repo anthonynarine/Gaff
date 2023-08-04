@@ -1,15 +1,27 @@
-import { Box, Typography } from "@mui/material";
-import { responsiveFontSizes, useTheme } from "@mui/material/styles";
+import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React from "react";
+
+/**
+ * Represents the properties of the SecondaryDraw component.
+ *
+ * @property {React.ReactNode} children - Elements to be rendered inside the SecondaryDraw component.
+ */
+type Props = {
+  children: React.ReactNode;
+};
 
 /**
  * A reusable secondary drawer component that displays a vertical list of paragraphs.
  * This component is typically used for additional content or navigation in wider views.
  *
+ * @param {Props} props - The properties of the SecondaryDraw component.
  * @returns {JSX.Element} The JSX representation of the SecondaryDraw component.
  */
-function SecondaryDraw() {
+const SecondaryDraw: React.FC<Props> = function ({ children }) {
   // Get the current theme using the useTheme() hook from Material-UI.
   const theme = useTheme();
+
 
   return (
     <Box
@@ -28,14 +40,9 @@ function SecondaryDraw() {
         overflow: "auto",
       }}
     >
-      {/* TEST Generate a list of paragraphs using a loop and the Array() constructor. */}
-      {[...Array(50)].map((_, i) => (
-        <Typography key={i} paragraph>
-          {i + 1}
-        </Typography>
-      ))}
+      {children}
     </Box>
   );
-}
+};
 
 export default SecondaryDraw;
