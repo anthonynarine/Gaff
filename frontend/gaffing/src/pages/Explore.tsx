@@ -2,10 +2,10 @@ import { Box, CssBaseline } from "@mui/material";
 import PrimaryAppBar from "../scaffold/PrimaryAppBar";
 import PrimaryDraw from "../scaffold/PrimaryDraw";
 import SecondaryDraw from "../scaffold/SecondaryDraw";
-import Main from "../scaffold/Main";
+import ExploreServers from "../components/Main/ExploreServers";
 import PopularChannels from "../components/PrimaryDraw/PopularChannels";
 import ExploreCategories from "../components/SecondaryDraw/ExploreCategories";
-import ExploreServers from "../components/Main/ExploreServers";
+import Main from "../scaffold/Main";
 
 function Home() {
   return (
@@ -18,9 +18,7 @@ function Home() {
       <SecondaryDraw>
         <ExploreCategories />
       </SecondaryDraw>
-      <Main>
-        <ExploreServers />
-      </Main>
+      <Main><ExploreServers/></Main>
     </Box>
   );
 }

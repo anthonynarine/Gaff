@@ -11,11 +11,10 @@ import {
 import useCrud from "../../hooks/useCruds";
 import { useEffect } from "react";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import { MEDIA_URL } from "../../config";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { TrendingUpOutlined } from "@mui/icons-material";
+
 
 interface Category {
   id: number;

@@ -110,6 +110,7 @@ class Category(models.Model):
             existing = get_object_or_404(Category, id=self.id)
             if existing.icon != self.icon:
                 existing.icon.delete(save=False)
+        self.name = self.name.lower()
 
         # if self.icon:
         #     scale_down_image(self.icon.path)
@@ -170,6 +171,7 @@ class Server(models.Model):
         validators=[validate_image_file_extension],
     )
     icon = models.ImageField(
+        
         upload_to=server_icon_upload_path,
         blank=True,
         null=True,
