@@ -22,6 +22,7 @@ const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
             // const response = await jwtAxios.get(`${BASE_URL}${apiURL}`, {})
             // const data = response.data
             const { data } = await jwtAxios.get(`${BASE_URL}${apiURL}`, {})
+            console.log("DATA:", data); // Log here to inspect the data
             setDataCRUD(data)
             setError(null)
             setIsLoading(false)
