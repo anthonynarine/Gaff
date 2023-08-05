@@ -1,5 +1,5 @@
 import { Box, CssBaseline } from "@mui/material";
-import PrimaryAppBar from "../scaffold/PrimaryAppBar";
+import PrimaryAppBar from "../scaffold/PrimaryAppBar/PrimaryAppBar";
 import PrimaryDraw from "../scaffold/PrimaryDraw";
 import SecondaryDraw from "../scaffold/SecondaryDraw";
 import Main from "../scaffold/Main";

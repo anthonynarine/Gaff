@@ -91,7 +91,7 @@ function ExploreServers() {
         </Typography>
         <Grid container spacing={{ xs: 0, sm: 2 }}>
           {dataCRUD.map((server) => {
-            console.log(`${MEDIA_URL}${server.banner_img}`);
+            // console.log(`${MEDIA_URL}${server.banner_img}`); TEST FULL IMG PATH
             return (
             <Grid item key={server.id} xs={12} sm={6} md={4} lg={3}>
               <Card

@@ -35,7 +35,7 @@ declare module "@mui/material/styles" {
 }
 
 // Function to create and customize the MUI theme
-export const createMuiTheme = () => {
+export const createMuiTheme = (mode:"light" | "dark") => {
     // Create the default theme and customize it by providing the "primaryAppBar" property
     let theme = createTheme({
         typography: {
@@ -54,6 +54,9 @@ export const createMuiTheme = () => {
         },
         secondaryDraw: {
             width: 240
+        },
+        palette: {
+            mode,
         },
         components: {
             MuiAppBar: {
