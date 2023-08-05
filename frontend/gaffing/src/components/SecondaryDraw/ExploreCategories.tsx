@@ -26,6 +26,7 @@ interface Category {
 function ExploreCategories() {
   // Theme
   const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark"
 
   const { dataCRUD, error, isLoading, fetchData } = useCrud<Category>(
     [],
@@ -80,6 +81,7 @@ function ExploreCategories() {
                         height: "25px",
                         display: "block",
                         margin: "auto",
+                        // filter: isDarkMode ? "invert(100%)" : "none",
                       }}
                     />
                   </ListItemAvatar>
