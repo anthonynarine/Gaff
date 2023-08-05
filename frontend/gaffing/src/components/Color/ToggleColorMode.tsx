@@ -2,6 +2,8 @@ import { CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import createMuiTheme from "../../theme/theme";
 import { ColorModeContext } from "../context/ColorModeContext";
+import  Cookies from "js-cookie"
+
 
 type ToggleColorModeProps = {
   children: React.ReactNode;
@@ -9,7 +11,7 @@ type ToggleColorModeProps = {
 
 const ToggleColorMode: React.FC<ToggleColorModeProps> = ({ children }) => {
   // Check the preferred color scheme using media query
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const prefersDarkMode = useMediaQuery("([prefers-color-scheme: dark])");
 
 /**
  * Declares a state variable 'mode' with setter function 'setMode'.
@@ -28,7 +30,8 @@ const ToggleColorMode: React.FC<ToggleColorModeProps> = ({ children }) => {
  * or to the user's OS-level preference if it's not.
  */
   const [mode, setMode] = useState<"light" | "dark">(() => {
-    const colorMode = localStorage.getItem("colorMode");
+    // const colorMode = localStorage.getItem("colorMode");  // W/ local storage
+    const colorMode = Cookies.get("colorMode") // W/ cook
     return (colorMode as "light" | "dark") || (prefersDarkMode ? "dark" : "light");
   });
 
@@ -39,7 +42,8 @@ const ToggleColorMode: React.FC<ToggleColorModeProps> = ({ children }) => {
 
   // Store color mode in local storage when 'mode' state changes
   useEffect(() => {
-    localStorage.setItem("colorMode", mode);
+    // localStorage.setItem("colorMode", mode);
+    Cookies.set("colorMode", mode);
   }, [mode]);
 
   /**
@@ -54,7 +58,7 @@ const ToggleColorMode: React.FC<ToggleColorModeProps> = ({ children }) => {
    * only recalculated if 'mode' changes. If 'mode' does not change between renders, 
    * the same object will be returned, helping to avoid unnecessary re-renders.
    */
-  const theme = useMemo(() => createMuiTheme(mode), [mode]);
+  const theme = useMemo(() => createMuiTheme(mode || "light"), [mode]);
 
  /**
    * The component renders a ColorModeContext.Provider and a ThemeProvider. 
