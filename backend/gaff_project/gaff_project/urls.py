@@ -9,7 +9,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
-from webchat.consumer import MyConsumer
+from webchat.consumer import WebChatConsumer
 
 #  instantiate
 router = DefaultRouter()
@@ -27,7 +27,7 @@ urlpatterns = [
 ] + router.urls
 
 websocket_urlpatterns = [
-    path("ws/test", MyConsumer.as_asgi())
+    path("ws/test", WebChatConsumer.as_asgi())
  ]
 
 if settings.DEBUG:

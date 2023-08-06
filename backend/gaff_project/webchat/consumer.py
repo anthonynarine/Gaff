@@ -1,40 +1,74 @@
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import JsonWebsocketConsumer
+from asgiref.sync import async_to_sync
 
-class MyConsumer(WebsocketConsumer):
+class WebChatConsumer(JsonWebsocketConsumer):
     """
-    A simple WebSocket consumer that handles connections, receives text messages, 
-    and sends a response back to the client.
+    WebSocket consumer that handles real-time chat messages for a web chat service.
+    
+    Example:
+        - A user sends a message from the frontend.
+        - `receive_json` processes the message.
+        - It then broadcasts the message to all clients through `chat_message`.
     """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the consumer, setting up the default chat room.
+        """
+        super().__init__(*args, **kwargs)
+        self.room_name = "testserver"
 
     def connect(self):
         """
-        Handle new WebSocket connections.
+        Connects the WebSocket, adding the socket to the chat room group.
+        
+        Example:
+            When a client opens the chat page, this method connects them to the chat room.
         """
-        # Accept the incoming connection
         self.accept()
-        # Note: To reject the connection, you can uncomment the following line:
-        # self.close()
+        async_to_sync(self.channel_layer.group_add)(self.room_name, self.channel_name)
 
-    def receive(self, text_data=None, bytes_data=None):
+    def receive_json(self, content):
         """
-        Receive messages from WebSocket.
+        Handles incoming JSON content (messages) from the client/front end.
 
-        :param text_data: The text data received from the client.
-        :param bytes_data: The bytes data received from the client. 
-                           This is expected to be None for this consumer as we are only dealing with text.
+        Args:
+        - content (dict): The message received from the client/front end.
+        
+        Example:
+            If the frontend sends:
+                {"message": "Hello World"}
+            This will broadcast:
+                {"type": "chat.message", "new_message": "Hello World"}
         """
-        # Since we're only expecting text data, we'll only handle text_data
-        # If there's any text data, send a 'Hello world!' message back to the client
-        if text_data:
-            self.send(text_data=text_data)
-        # Note: To force-close the connection, you can uncomment the following line:
-        # self.close()
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_name,
+            {
+                "type": "chat.message", 
+                "new_message": content["message"]
+            },
+        )
+
+    def chat_message(self, message):
+        """
+        Sends a chat message to the client/front end.
+
+        Args:
+        - message (dict): The message to be sent to the client.
+        
+        Example:
+            Given the message:
+                {"type": "chat.message", "new_message": "Hello World"}
+            All clients in the chat room will receive:
+                {"new_message": "Hello World"}
+        """
+        self.send_json(message)
 
     def disconnect(self, close_code):
         """
-        Handle the closing of the WebSocket connection.
+        Handles the WebSocket disconnect event.
 
-        :param close_code: An integer code indicating the reason for disconnection.
+        Args:
+        - close_code (int): The code signifying the reason for the disconnection.
         """
-        # Here you can add any cleanup or actions needed during disconnection.
         pass
