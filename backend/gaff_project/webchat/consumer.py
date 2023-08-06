@@ -6,9 +6,6 @@ class MyConsumer(WebsocketConsumer):
     and sends a response back to the client.
     """
 
-    # This consumer is part of the 'broadcast' group, enabling broadcast messaging
-    groups = ["broadcast"]
-
     def connect(self):
         """
         Handle new WebSocket connections.

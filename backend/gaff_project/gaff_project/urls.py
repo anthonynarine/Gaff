@@ -26,7 +26,7 @@ urlpatterns = [
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ] + router.urls
 
-websocket_urlPatterns = [
+websocket_urlpatterns = [
     path("ws/test", MyConsumer.as_asgi())
  ]
 
