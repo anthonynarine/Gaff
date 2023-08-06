@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # local
     "account",
     "server",
+    "webchat",
     # 3rd party
     "drf_spectacular",
     "rest_framework",
