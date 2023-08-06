@@ -26,7 +26,7 @@ class MyConsumer(WebsocketConsumer):
         # Since we're only expecting text data, we'll only handle text_data
         # If there's any text data, send a 'Hello world!' message back to the client
         if text_data:
-            self.send(text_data="Hello world!")
+            self.send(text_data=text_data)
         # Note: To force-close the connection, you can uncomment the following line:
         # self.close()
 
