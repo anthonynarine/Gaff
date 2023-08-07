@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # local
     "account",
     "server",
+    "webchat",
     # 3rd party
     "drf_spectacular",
     "rest_framework",
@@ -132,4 +133,12 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "allows users to exchange real-time text messages",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": True,
+}
+
+
+#....ADDED ....
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
