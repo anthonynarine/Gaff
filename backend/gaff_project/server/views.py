@@ -77,8 +77,8 @@ class ServerListViewSet(viewsets.ViewSet):
         with_num_members = request.query_params.get("with_num_members") == "true"
 
         # If user-specific or server-specific requests are made, check authentication
-        if (by_user or by_serverid) and not request.user.is_authenticated:
-            raise AuthenticationFailed()
+        # if (by_user or by_serverid) and not request.user.is_authenticated:
+        #     # raise AuthenticationFailed()
 
         # If by_user is true, filter the queryset by the user
         if by_user:

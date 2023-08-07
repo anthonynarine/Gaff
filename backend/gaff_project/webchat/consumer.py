@@ -72,3 +72,4 @@ class WebChatConsumer(JsonWebsocketConsumer):
         - close_code (int): The code signifying the reason for the disconnection.
         """
         pass
+ 
