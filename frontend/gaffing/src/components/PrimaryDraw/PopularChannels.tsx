@@ -14,6 +14,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import { MEDIA_URL } from "../../config";
 import { Link } from "react-router-dom";
+import Server  from "../../../src/@types/server"
 
 interface PropsFromPrimaryDraw {
   open: boolean;

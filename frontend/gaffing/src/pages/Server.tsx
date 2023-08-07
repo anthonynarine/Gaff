@@ -46,7 +46,7 @@ function Server() {
         <UserServers open={false} data={dataCRUD} />
       </PrimaryDraw>
       <SecondaryDraw>
-        <ServerChannels />
+        <ServerChannels data={dataCRUD} />
       </SecondaryDraw>
       <Main>
         <MessageInterface />
