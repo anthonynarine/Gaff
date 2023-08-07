@@ -7,8 +7,9 @@ import MessageInterface from "../components/Main/Server/MessageInterface";
 import ServerChannels from "../components/SecondaryDraw/ServerChannels";
 import UserServers from "../components/PrimaryDraw/UserServers";
 import { useNavigate, useParams } from "react-router";
-import { useEffect } from "react"
+import { useEffect } from "react";
 import useCrud from "../hooks/useCruds";
+import { Server } from "../@types/server";
 
 function Server() {
   const navigate = useNavigate();
@@ -19,24 +20,36 @@ function Server() {
     `/server/select/?by_serverid=${serverId}`
   );
 
-
-  useEffect(()=>{
+  useEffect(() => {
     fetchData();
-  }, [])
-
+  }, []);
 
   if (error !== null && error.message == "400") {
     navigate("/");
+    return null;
   }
 
-  // const isChannel = (): Boolean => {
-  //   if (!channelId) {
-  //     return true;
-  //   }
-  //   return dataCRUD.some((server) =>
-  //     Server.channel_server.some((channel) => channel.id === parseInt(channelID))
-  //   );
-  // };
+  const isChannel = (): boolean => {
+    if(!channelId) {
+      return true;
+    }
+    return dataCRUD.some((server) =>
+      server.channel_server.some(
+        (channel) =>channel.id === parseInt(channelId)
+      )
+    );
+  };
+
+  useEffect(()=> {
+    if (!isChannel()) {
+      navigate(`/server/${serverId}`)
+    }
+
+  },[dataCRUD, channelId])
+
+
+
+
 
   return (
     <Box sx={{ display: "flex" }}>
