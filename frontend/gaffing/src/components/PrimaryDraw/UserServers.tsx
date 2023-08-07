@@ -8,7 +8,7 @@ import {
     ListItemButton,
   } from "@mui/material";
   
-  import useCrud from "../../hooks/useCruds";
+
   import { useEffect } from "react";
   import ListItemAvatar from "@mui/material/ListItemAvatar";
   import Avatar from "@mui/material/Avatar";
@@ -26,20 +26,17 @@ import {
     category: string;
     icon: string;
   }
+
+  interface ServerChannelsProps {
+  data: Server[];
+  }
   
-  const UserServers: React.FC<PropsFromPrimaryDraw> = ({ open }) => {
-    const { dataCRUD, error, isLoading, fetchData } = useCrud<Server>(
-      [],
-      "/server/select/?by_serverid=1"
-    );
+  const UserServers: React.FC<PropsFromPrimaryDraw & ServerChannelsProps > = ({ open, data }) => {
   
+
     useEffect(() => {
-      fetchData();
-    }, []);
-  
-    useEffect(() => {
-      console.log("Servers", dataCRUD)
-    }, [dataCRUD]);
+      console.log("Servers", data)
+    }, [data]);
   
     return (
       <>
@@ -60,7 +57,7 @@ import {
           </Typography>
         </Box>
         <List>
-          {dataCRUD.map((server) => (
+          {data.map((server) => (
             <ListItem key={server.id} disableGutters sx={{ display: "block" }} dense={true}>
               <Link
                 to={`/server/${server.id}`}
