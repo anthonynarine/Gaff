@@ -26,29 +26,23 @@ function Server() {
 
   if (error !== null && error.message == "400") {
     navigate("/");
-    return null;
-  }
+    // return null;
+}
 
-  const isChannel = (): boolean => {
-    if(!channelId) {
-      return true;
-    }
-    return dataCRUD.some((server) =>
-      server.channel_server.some(
-        (channel) =>channel.id === parseInt(channelId)
-      )
-    );
-  };
+useEffect(() => {
+    const isChannel = (): boolean => {
+        if (!channelId) {
+            return true;
+        }
+        return dataCRUD.some((server) =>
+            server.channel_server.some((channel) => channel.id === parseInt(channelId))
+        );
+    };
 
-  useEffect(()=> {
     if (!isChannel()) {
-      navigate(`/server/${serverId}`)
+        navigate(`/server/${serverId}`);
     }
-
-  },[dataCRUD, channelId])
-
-
-
+}, [dataCRUD, channelId]);
 
 
   return (

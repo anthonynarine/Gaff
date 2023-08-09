@@ -27,8 +27,8 @@ urlpatterns = [
 ] + router.urls
 
 websocket_urlpatterns = [
-    path("ws/test", WebChatConsumer.as_asgi())
- ]
+    path("<str:serverId>/<str:channelId>", WebChatConsumer.as_asgi())
+ ]  #http://localhost:5173/server/1/1
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

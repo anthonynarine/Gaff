@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
-const socketURL = "ws://localhost:8000/ws/test";
 
 /**
  * MessageInterface component establishes a WebSocket connection to handle real-time chat functionalities.
@@ -13,6 +13,10 @@ const socketURL = "ws://localhost:8000/ws/test";
 export default function MessageInterface() {
   const [newMessage, setNewMessage] = useState<string[]>([]);
   const [message, setMessage] = useState<string>("");
+  const { serverId, channelId } = useParams();
+
+          // http://localhost:5173/server/1/1 channelId 
+  const socketURL = channelId ? `ws://localhost:8000/${serverId}/${channelId}` : null;
 
   const { sendJsonMessage } = useWebSocket(socketURL, {
     onOpen: () => console.log("WebSocket connection opened successfully!"),

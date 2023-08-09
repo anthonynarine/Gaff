@@ -3,27 +3,32 @@ from asgiref.sync import async_to_sync
 
 class WebChatConsumer(JsonWebsocketConsumer):
     """
-    WebSocket consumer that handles real-time chat messages for a web chat service.
-    
-    Example:
-        - A user sends a message from the frontend.
-        - `receive_json` processes the message.
-        - It then broadcasts the message to all clients through `chat_message`.
+    WebSocket consumer that manages real-time chat interactions over WebSocket connections.
+    This consumer handles the lifecycle of WebSocket connections including connection,
+    message reception, message sending, and disconnection. The underlying WebSocket handshake
+    and protocol specifics are abstracted by the Django Channels library.
     """
 
     def __init__(self, *args, **kwargs):
         """
-        Initialize the consumer, setting up the default chat room.
+        Initialize the consumer and set up the default chat room.
+        
+        Attributes:
+            room_name (str): The name of the chat room this consumer instance is associated with.
         """
         super().__init__(*args, **kwargs)
-        self.room_name = "testserver"
+        self.channel_id = None
+        self.user = None
 
     def connect(self):
         """
-        Connects the WebSocket, adding the socket to the chat room group.
+        Called immediately after a successful WebSocket handshake. 
         
-        Example:
-            When a client opens the chat page, this method connects them to the chat room.
+        This method:
+        1. Accepts the WebSocket connection.
+        2. Adds the socket to the chat room group for message broadcasting.
+        
+        The actual handshake mechanics are handled internally by Django Channels.
         """
         self.accept()
         async_to_sync(self.channel_layer.group_add)(self.room_name, self.channel_name)
@@ -33,13 +38,10 @@ class WebChatConsumer(JsonWebsocketConsumer):
         Handles incoming JSON content (messages) from the client/front end.
 
         Args:
-        - content (dict): The message received from the client/front end.
+            content (dict): The message received from the client/front end.
         
-        Example:
-            If the frontend sends:
-                {"message": "Hello World"}
-            This will broadcast:
-                {"type": "chat.message", "new_message": "Hello World"}
+        This method processes the incoming message and broadcasts it to all clients
+        in the associated chat room. The message format is transformed slightly during this process.
         """
         async_to_sync(self.channel_layer.group_send)(
             self.room_name,
@@ -54,13 +56,10 @@ class WebChatConsumer(JsonWebsocketConsumer):
         Sends a chat message to the client/front end.
 
         Args:
-        - message (dict): The message to be sent to the client.
-        
-        Example:
-            Given the message:
-                {"type": "chat.message", "new_message": "Hello World"}
-            All clients in the chat room will receive:
-                {"new_message": "Hello World"}
+            message (dict): The message to be sent to the client.
+            
+        This method is responsible for forwarding chat messages to the client after
+        they have been received and processed.
         """
         self.send_json(message)
 
@@ -69,7 +68,11 @@ class WebChatConsumer(JsonWebsocketConsumer):
         Handles the WebSocket disconnect event.
 
         Args:
-        - close_code (int): The code signifying the reason for the disconnection.
+            close_code (int): The code signifying the reason for the disconnection.
+            
+        This method is called when a WebSocket connection is terminated. Cleanup or
+        additional disconnect logic can be added here if needed.
         """
         pass
+
  
