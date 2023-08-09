@@ -31,7 +31,9 @@ class WebChatConsumer(JsonWebsocketConsumer):
         The actual handshake mechanics are handled internally by Django Channels.
         """
         self.accept()
-        async_to_sync(self.channel_layer.group_add)(self.room_name, self.channel_name)
+        self.channel_id = self.scope["url_route"]["kwargs"]["channelId"]
+        print(self.scope)
+        async_to_sync(self.channel_layer.group_add)(self.channel_id, self.channel_name)
 
     def receive_json(self, content):
         """
@@ -44,7 +46,7 @@ class WebChatConsumer(JsonWebsocketConsumer):
         in the associated chat room. The message format is transformed slightly during this process.
         """
         async_to_sync(self.channel_layer.group_send)(
-            self.room_name,
+            self.channel_id,
             {
                 "type": "chat.message", 
                 "new_message": content["message"]

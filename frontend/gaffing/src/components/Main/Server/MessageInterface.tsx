@@ -17,7 +17,8 @@ export default function MessageInterface() {
 
           // http://localhost:5173/server/1/1 channelId 
   const socketURL = channelId ? `ws://localhost:8000/${serverId}/${channelId}` : null;
-
+  // we're now sending the serverId and channelId to the backend
+  
   const { sendJsonMessage } = useWebSocket(socketURL, {
     onOpen: () => console.log("WebSocket connection opened successfully!"),
     onClose: () => console.log("WebSocket connection closed."),
