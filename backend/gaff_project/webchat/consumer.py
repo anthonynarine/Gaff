@@ -87,7 +87,7 @@ class WebChatConsumer(JsonWebsocketConsumer):
             {
                 "type": "chat.message",
                 "id": message.id,
-                "sender": message.content,
+                "sender": self.user.username,
                 "timestamp": message.timestamp.isoformat(),
                 "new_message": message.content,
             },
