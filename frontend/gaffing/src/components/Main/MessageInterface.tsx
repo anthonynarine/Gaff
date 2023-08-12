@@ -1,24 +1,28 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import useCrud from "../../hooks/useCruds";
 import Server from "../../pages/Server";
+import { useTheme } from "@mui/material/styles";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
+import MessageInterfaceChannels from "./MessageInterfaceChannels";
 
 interface Message {
   id: number;
   sender: string;
   content: string;
   timestamp: string;
-}
+};
 
 interface ServerChannelProps {
   data: Server[];
-}
+};
 
-export default function MessageInterface(props: ServerChannelProps) {
-  const { data } = props;
+const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
+  const theme = useTheme();
+  const classes = MessageInterfaceStyles(theme);  
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const { serverId, channelId } = useParams();
@@ -69,8 +73,9 @@ export default function MessageInterface(props: ServerChannelProps) {
 
   return (
     <>
+      <MessageInterfaceChannels data={data}  />
       {channelId === undefined ? (
-        <Box sx={MessageInterfaceStyles.box}>
+        <Box sx={classes.box}>
           <Box sx={{ textAlign: "center" }}>
             <Typography
               variant="h4"
@@ -78,7 +83,7 @@ export default function MessageInterface(props: ServerChannelProps) {
               letterSpacing={"-0.5px"}
               sx={{ px: 5, maxWidth: "600px" }}
             >
-              Welcome to {server_name}
+              Welcome to {server_name} Server
             </Typography>
             <Typography>{data?.[0]?.description ?? "This is our home"}</Typography>
           </Box>
@@ -111,10 +116,12 @@ export default function MessageInterface(props: ServerChannelProps) {
               Enter Message:
               <input type="text" value={inputMessage} onChange={handleMessageChange} />
             </label>
-            <button type="submit">Send Message</button>
+            <Button sx={classes.submitBtn}  type="submit">Send Message</Button>
           </form>
         </>
       )}
     </>
   );
-}
+};
+
+export default MessageInterface
