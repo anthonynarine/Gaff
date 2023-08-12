@@ -21,7 +21,17 @@ export default function MessageInterface() {
   const socketURL = channelId ? `ws://localhost:8000/${serverId}/${channelId}` : null;
 
   const { sendJsonMessage } = useWebSocket(socketURL, {
-    onOpen: () => console.log("WebSocket connection opened successfully!"),
+    onOpen: async () => {
+      try {
+        const data = await fetchData();
+        setMessages([]);
+        setMessages(Array.isArray(data) ? data : [])
+        console.log("WebSocket connection opened successfully!")
+      } catch (error){
+        console.log(error)
+      }
+    },
+    
     onClose: () => console.log("WebSocket connection closed."),
     onError: () => console.log("An error occurred with the WebSocket connection."),
     onMessage: handleIncomingMessage,
