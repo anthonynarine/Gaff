@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import Typography from '@mui/material/Typography';
+import {Typography, Box} from "@mui/material";
 import useCrud from "../../../hooks/useCruds";
 import Server from "../../../pages/Server";
 
@@ -16,7 +16,7 @@ export default function MessageInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const { serverId, channelId } = useParams();
-  const { fetchData } = useCrud<Server>([], `/message/?channel_id=${channelId}`)
+  const { fetchData } = useCrud<Server>([], `/message/?channel_id=${channelId}`);
 
   const socketURL = channelId ? `ws://localhost:8000/${serverId}/${channelId}` : null;
 
@@ -25,13 +25,13 @@ export default function MessageInterface() {
       try {
         const data = await fetchData();
         // setMessages([]);
-        setMessages(Array.isArray(data) ? data : [])
-        console.log("WebSocket connection opened successfully!")
-      } catch (error){
-        console.log(error)
+        setMessages(Array.isArray(data) ? data : []);
+        console.log("WebSocket connection opened successfully!");
+      } catch (error) {
+        console.log(error);
       }
     },
-    
+
     onClose: () => console.log("WebSocket connection closed."),
     onError: () => console.log("An error occurred with the WebSocket connection."),
     onMessage: handleIncomingMessage,
@@ -62,28 +62,40 @@ export default function MessageInterface() {
 
   return (
     <>
-      {/* Render each received message */}
-      {messages.map((msg) => (
-        <div key={msg.id}>
-        <p>
-            <strong>{msg.sender}</strong> 
-            <Typography 
-                variant="body1" 
-                style={{ backgroundColor: 'blue', color: 'white', borderRadius: '8px', padding: '8px 12px', display: 'inline-block' }}>
-                {msg.content}
-            </Typography>
-        </p>
-        </div>
-      ))}
-
-      {/* Input field for the user's message */}
-      <form onSubmit={handleSendMessage}>
-        <label>
-          Enter Message:
-          <input type="text" value={inputMessage} onChange={handleMessageChange} />
-        </label>
-        <button type="submit">Send Message</button>
-      </form>
+      {channelId === undefined ? (
+        <Box>Home</Box>
+      ) : (
+        <>
+          {/* Render each received message */}
+          {messages.map((msg) => (
+            <div key={msg.id}>
+              <p>
+                <strong>{msg.sender}</strong>
+                <Typography
+                  variant="body1"
+                  style={{
+                    backgroundColor: "blue",
+                    color: "white",
+                    borderRadius: "8px",
+                    padding: "8px 12px",
+                    display: "inline-block",
+                  }}
+                >
+                  {msg.content}
+                </Typography>
+              </p>
+            </div>
+          ))}
+          {/* Input field for the user's message */}
+          <form onSubmit={handleSendMessage}>
+            <label>
+              Enter Message:
+              <input type="text" value={inputMessage} onChange={handleMessageChange} />
+            </label>
+            <button type="submit">Send Message</button>
+          </form>
+        </>
+      )}
     </>
   );
 }
