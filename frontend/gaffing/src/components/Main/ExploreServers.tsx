@@ -5,7 +5,6 @@ import {
   ListItemText,
   Box,
   Typography,
-  ListItemButton,
 } from "@mui/material";
 
 import useCrud from "../../hooks/useCruds";
@@ -19,16 +18,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
+import Server from "../../pages/Server";
 
-interface Server {
-  id: number;
-  name: string;
-  category: string;
-  icon: string;
-  banner_img: string;
-  // banner: string; 
-  // a lesson was learned here about matching model fieldnames and when rendering
-}
 
 function ExploreServers() {
   const { categoryName } = useParams();
