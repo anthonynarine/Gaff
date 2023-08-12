@@ -1,78 +1,78 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
+import Typography from '@mui/material/Typography';
+import useCrud from "../../../hooks/useCruds";
+import Server from "../../../pages/Server";
 
+interface Message {
+  id: number;
+  sender: string;
+  content: string;
+  timestamp: string;
+}
 
-/**
- * MessageInterface component establishes a WebSocket connection to handle real-time chat functionalities.
- * Users can send messages and view the list of received messages.
- * 
- * Example usage:
- *    <MessageInterface />
- */
 export default function MessageInterface() {
-  const [newMessage, setNewMessage] = useState<string[]>([]);
-  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputMessage, setInputMessage] = useState<string>("");
   const { serverId, channelId } = useParams();
+  const { fetchData } = useCrud<Server>([], `/message/?channel_id=${channelId}`)
 
-          // http://localhost:5173/server/1/1 channelId 
   const socketURL = channelId ? `ws://localhost:8000/${serverId}/${channelId}` : null;
-  // we're now sending the serverId and channelId to the backend
-  
+
   const { sendJsonMessage } = useWebSocket(socketURL, {
-    onOpen: () => console.log("WebSocket connection opened successfully!"),
+    onOpen: async () => {
+      try {
+        const data = await fetchData();
+        // setMessages([]);
+        setMessages(Array.isArray(data) ? data : [])
+        console.log("WebSocket connection opened successfully!")
+      } catch (error){
+        console.log(error)
+      }
+    },
+    
     onClose: () => console.log("WebSocket connection closed."),
     onError: () => console.log("An error occurred with the WebSocket connection."),
     onMessage: handleIncomingMessage,
   });
 
-  /**
-   * Handles the incoming messages from the WebSocket server.
-   * 
-   * @param {Object} msg - The WebSocket message event.
-   * 
-   * Example:
-   *    Given the incoming message:
-   *        {"new_message": "Hello World"}
-   *    The `newMessage` state will be updated with the new message.
-   */
   function handleIncomingMessage(msg: any) {
-    const data = JSON.parse(msg.data); 
-    setNewMessage((prev_msg) => [...prev_msg, data.new_message]);
+    const data = JSON.parse(msg.data);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        id: data.id,
+        sender: data.sender,
+        content: data.new_message,
+        timestamp: data.timestamp,
+      },
+    ]);
   }
 
-  /**
-   * Updates the state variable 'message' based on the input field's content.
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} e - The input change event.
-   * 
-   * Example:
-   *    If the user types "Hi" in the input field, `message` will be updated to "Hi".
-   */
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
+    setInputMessage(e.target.value);
   };
 
-  /**
-   * Send the user's message to the WebSocket server.
-   * 
-   * Example:
-   *    Given the `message` state as "Hi", upon button click, this will send:
-   *        {"type": "message", "message": "Hi"} 
-   *    to the server.
-   */
   const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault(); 
-    sendJsonMessage({ type: "message", message });
-    setMessage(""); 
+    e.preventDefault();
+    sendJsonMessage({ type: "message", message: inputMessage });
+    setInputMessage("");
   };
 
   return (
     <>
       {/* Render each received message */}
-      {newMessage.map((msg, index) => (
-        <div key={index}>
-          <p>{msg}</p>
+      {messages.map((msg) => (
+        <div key={msg.id}>
+        <p>
+            <strong>{msg.sender}</strong> 
+            <Typography 
+                variant="body1" 
+                style={{ backgroundColor: 'blue', color: 'white', borderRadius: '8px', padding: '8px 12px', display: 'inline-block' }}>
+                {msg.content}
+            </Typography>
+        </p>
         </div>
       ))}
 
@@ -80,12 +80,10 @@ export default function MessageInterface() {
       <form onSubmit={handleSendMessage}>
         <label>
           Enter Message:
-          <input type="text" value={message} onChange={handleMessageChange} />
+          <input type="text" value={inputMessage} onChange={handleMessageChange} />
         </label>
         <button type="submit">Send Message</button>
       </form>
-
-
     </>
   );
 }
