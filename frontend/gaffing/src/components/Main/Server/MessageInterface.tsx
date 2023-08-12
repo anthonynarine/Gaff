@@ -24,7 +24,7 @@ export default function MessageInterface() {
     onOpen: async () => {
       try {
         const data = await fetchData();
-        setMessages([]);
+        // setMessages([]);
         setMessages(Array.isArray(data) ? data : [])
         console.log("WebSocket connection opened successfully!")
       } catch (error){
