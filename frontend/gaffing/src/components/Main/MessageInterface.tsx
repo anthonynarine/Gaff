@@ -4,7 +4,7 @@ import useWebSocket from "react-use-websocket";
 import { Typography, Box, Button } from "@mui/material";
 import useCrud from "../../hooks/useCruds";
 import Server from "../../pages/Server";
-import { useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
 
@@ -13,11 +13,11 @@ interface Message {
   sender: string;
   content: string;
   timestamp: string;
-};
+}
 
 interface ServerChannelProps {
   data: Server[];
-};
+}
 
 const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
   const theme = useTheme();

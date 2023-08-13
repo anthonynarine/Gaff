@@ -10,6 +10,10 @@ export const MessageInterfaceStyles = (theme: Theme) => ({
     alignItems: "center",
     // ... other properties
   },
+  listItemAvatarBox: {
+    display: {xs: "block", sm: "none"}
+
+  },
   submitBtn: {
     backgroundColor: "#060606",
     width: 150,
@@ -28,4 +32,15 @@ export const MessageInterfaceStyles = (theme: Theme) => ({
   msgInterFToolbar: {
     minHeight: theme.primaryAppBar.height,
   },
+  channelInterfaceAppBar: {
+    backgroundColor: theme.palette.background.default,
+    borderBottom: `1px solid ${theme.palette.divider}`
+
+  },
+  channelInterfaceToolBar: {
+    minHeight: theme.primaryAppBar.height, 
+    height: theme.primaryAppBar.height,
+    display: "flex",
+    alignItems: "center"
+  }, 
 });
