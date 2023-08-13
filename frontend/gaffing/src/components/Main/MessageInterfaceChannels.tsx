@@ -9,7 +9,6 @@ import {
   Drawer,
   useTheme,
   ListItem,
-  useMediaQuery,
 } from "@mui/material";
 
 import { MEDIA_URL } from "../../config";
@@ -19,7 +18,7 @@ import ServerChannels from "../SecondaryDraw/ServerChannels";
 import MoreVertIccon from "@mui/icons-material/MoreVert";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
 import getChannelNameFromData from "../../helper/getChannelNameFromData";
-import { useResponsiveDrawer } from "../../helper/useResponsiveDrawer";
+import { useResponsiveDrawer } from "../../hooks/useResponsiveDrawer";
 
 interface ServerChannelProps {
   data: Server[];
@@ -31,7 +30,7 @@ const MessageInterfaceChannels: React.FC<ServerChannelProps> = ({ data }) => {
   const theme = useTheme();
   const classes = MessageInterfaceStyles(theme);
   const { serverId, channelId } = useParams();
-  
+
   const channelName = getChannelNameFromData(data, serverId, channelId);
 
 

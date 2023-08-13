@@ -1,7 +1,7 @@
 import { Theme } from "@mui/material/styles";
 
 export const MessageInterfaceStyles = (theme: Theme) => ({
-  box: {
+  messageInterfaceNoChannelSelectedBox: {
     overflow: "hidden",
     padding: theme.spacing(0),
     height: `calc(80vh - ${theme.primaryAppBar.height}px)`,
@@ -13,6 +13,15 @@ export const MessageInterfaceStyles = (theme: Theme) => ({
   listItemAvatarBox: {
     display: {xs: "block", sm: "none"}
 
+  },
+  renderMessageBox: {
+    overflow: "hidden",
+    p: 0,
+    height: `calc(100vh -100px)`,
+  },
+  renderMessageList:{
+    width: "100%",
+    bgColor: "background.pater",
   },
   submitBtn: {
     backgroundColor: "#060606",

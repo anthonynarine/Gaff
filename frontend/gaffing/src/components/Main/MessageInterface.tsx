@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import { Typography, Box, Button } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+} from "@mui/material";
 import useCrud from "../../hooks/useCruds";
 import Server from "../../pages/Server";
 import { useTheme } from "@mui/material";
@@ -21,7 +30,7 @@ interface ServerChannelProps {
 
 const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
   const theme = useTheme();
-  const classes = MessageInterfaceStyles(theme);  
+  const classes = MessageInterfaceStyles(theme);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
@@ -73,9 +82,9 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
 
   return (
     <>
-      <MessageInterfaceChannels data={data}  />
+      <MessageInterfaceChannels data={data} />
       {channelId === undefined ? (
-        <Box sx={classes.box}>
+        <Box sx={classes.messageInterfaceNoChannelSelectedBox}>
           <Box sx={{ textAlign: "center" }}>
             <Typography
               variant="h4"
@@ -91,32 +100,63 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
       ) : (
         <>
           {/* Render each received message */}
-          {messages.map((msg) => (
-            <div key={msg.id}>
-              <p>
-                <strong>{msg.sender}</strong>
-                <Typography
-                  variant="body1"
-                  style={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: "8px",
-                    padding: "8px 12px",
-                    display: "inline-block",
-                  }}
-                >
-                  {msg.content}
-                </Typography>
-              </p>
-            </div>
-          ))}
+          <Box sx={classes.renderMessageBox}>
+            <List sx={classes.renderMessageList}>
+              {messages.map((msg: Message) => {
+                return (
+                  <ListItem key={msg.id} alignItems="flex-start">
+                    <ListItemAvatar>
+                      <Avatar alt="user image" />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primaryTypographyProps={{ fontSize: "12px", variant: "body2" }}
+                      primary={
+                        <Typography
+                          component="span"
+                          variant="body1"
+                          color="text.primary"
+                          sx={{ display: "inline", fontWwight: 600 }}
+                        >
+                          {msg.sender}
+                        </Typography>
+                      }
+                      secondary={
+                        <Box>
+                        <Typography
+                          variant="body1"
+                          component="span"
+                          color="text.parmary"
+                          style={{
+                            overflow: "visible",
+                            whiteSpace: "normal",
+                            textOverflow: "clip",
+                          }}
+                          sx={{
+                            display: "inline",
+                            LineHeight: 1.2,
+                            fontweight: 400,
+                            letterSpacing: "-0.2px",
+                          }}
+                        >
+                          {msg.content}
+                        </Typography>
+                        </Box>
+                      }
+                    ></ListItemText>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Box>
           {/* Input field for the user's message */}
           <form onSubmit={handleSendMessage}>
             <label>
               Enter Message:
               <input type="text" value={inputMessage} onChange={handleMessageChange} />
             </label>
-            <Button sx={classes.submitBtn}  type="submit">Send Message</Button>
+            <Button sx={classes.submitBtn} type="submit">
+              Send Message
+            </Button>
           </form>
         </>
       )}
@@ -124,4 +164,4 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
   );
 };
 
-export default MessageInterface
+export default MessageInterface;

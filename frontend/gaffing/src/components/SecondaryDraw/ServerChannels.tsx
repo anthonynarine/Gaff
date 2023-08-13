@@ -35,7 +35,7 @@ function ServerChannels(props: ServerChannelsProps) {
           display: "flex",
           alignItems: "center",
           px: 2,
-          borderBottom: `2px solid ${theme.palette.divider}`,
+          borderBottom: `1px solid ${theme.palette.divider}`,
           positon: "sticky",
           top: 0,
           backgroundColor: theme.palette.background.default,

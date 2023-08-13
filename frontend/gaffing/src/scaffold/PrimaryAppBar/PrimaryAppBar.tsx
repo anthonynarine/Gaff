@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import ExploreCategories from "../../components/SecondaryDraw/ExploreCategories";
 import AccountButton from "./AccountButton";
-import { useResponsiveDrawer } from "../../helper/useResponsiveDrawer";
+import { useResponsiveDrawer } from "../../hooks/useResponsiveDrawer";
 
 const PrimaryAppBar = () => {
 
