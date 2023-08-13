@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,36 +5,20 @@ import {
   Box,
   IconButton,
   Drawer,
-  useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import ExploreCategories from "../../components/SecondaryDraw/ExploreCategories";
 import AccountButton from "./AccountButton";
+import { useResponsiveDrawer } from "../../helper/useResponsiveDrawer";
 
 const PrimaryAppBar = () => {
-  // State for the drawer visibility
-  const [isDrawerVisible, setDrawerVisibility] = useState(false);
+
+  const { isDrawerVisible, toggleDrawer } = useResponsiveDrawer();
 
   // Theme
   const theme = useTheme();
-
-  // Check if the screen is small (up to "sm" breakpoint)
-  const isSmallScreen = useMediaQuery(theme.breakpoints.up("sm"));
-
-  // Effect to handle drawer visibility on small screens
-  useEffect(() => {
-    // If the screen is small and the drawer is visible, close the drawer
-    if (isSmallScreen && isDrawerVisible) {
-      setDrawerVisibility(false);
-    }
-  }, [isSmallScreen, isDrawerVisible]);
-
-  // Toggle the drawer visibility (open or closed)
-  const toggleDrawer = (visible: boolean) => () => {
-    setDrawerVisibility(visible);
-  };
 
   //....MAKE THIS INTO IT'S OWN COMPONENT ON REFACTOR
   const list = () => (

@@ -16,38 +16,24 @@ import { MEDIA_URL } from "../../config";
 import { Server } from "../../@types/server";
 import { useParams } from "react-router-dom";
 import ServerChannels from "../SecondaryDraw/ServerChannels";
-import { useState, useEffect } from "react";
 import MoreVertIccon from "@mui/icons-material/MoreVert";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
 import getChannelNameFromData from "../../helper/getChannelNameFromData";
+import { useResponsiveDrawer } from "../../helper/useResponsiveDrawer";
 
 interface ServerChannelProps {
   data: Server[];
 }
 
 const MessageInterfaceChannels: React.FC<ServerChannelProps> = ({ data }) => {
-  const [isDrawerVisible, setDrawerVisibility] = useState(false);
+  const { isDrawerVisible, toggleDrawer } = useResponsiveDrawer();
 
   const theme = useTheme();
   const classes = MessageInterfaceStyles(theme);
   const { serverId, channelId } = useParams();
+  
   const channelName = getChannelNameFromData(data, serverId, channelId);
 
-  // Check if the screen is small (up to "sm" breakpoint)
-  const isSmallScreen = useMediaQuery(theme.breakpoints.up("sm"));
-
-  // Effect to handle drawer visibility on small screens
-  useEffect(() => {
-    // If the screen is small and the drawer is visible, close the drawer
-    if (isSmallScreen && isDrawerVisible) {
-      setDrawerVisibility(false);
-    }
-  }, [isSmallScreen, isDrawerVisible]);
-
-  // Toggle the drawer visibility (open or closed)
-  const toggleDrawer = (visible: boolean) => () => {
-    setDrawerVisibility(visible);
-  };
 
   const list = () => (
     <Box
