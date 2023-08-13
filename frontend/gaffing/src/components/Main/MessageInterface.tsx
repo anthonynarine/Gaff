@@ -5,17 +5,13 @@ import {
   Typography,
   Box,
   Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
 } from "@mui/material";
 import useCrud from "../../hooks/useCruds";
 import Server from "../../pages/Server";
 import { useTheme } from "@mui/material";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
+import MessageList from "./MessageList";
 
 interface Message {
   id: number;
@@ -101,52 +97,7 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
         <>
           {/* Render each received message */}
           <Box sx={classes.renderMessageBox}>
-            <List sx={classes.renderMessageList}>
-              {messages.map((msg: Message) => {
-                return (
-                  <ListItem key={msg.id} alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar alt="user image" />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primaryTypographyProps={{ fontSize: "12px", variant: "body2" }}
-                      primary={
-                        <Typography
-                          component="span"
-                          variant="body1"
-                          color="text.primary"
-                          sx={{ display: "inline", fontWwight: 600 }}
-                        >
-                          {msg.sender}
-                        </Typography>
-                      }
-                      secondary={
-                        <Box>
-                        <Typography
-                          variant="body1"
-                          component="span"
-                          color="text.parmary"
-                          style={{
-                            overflow: "visible",
-                            whiteSpace: "normal",
-                            textOverflow: "clip",
-                          }}
-                          sx={{
-                            display: "inline",
-                            LineHeight: 1.2,
-                            fontweight: 400,
-                            letterSpacing: "-0.2px",
-                          }}
-                        >
-                          {msg.content}
-                        </Typography>
-                        </Box>
-                      }
-                    ></ListItemText>
-                  </ListItem>
-                );
-              })}
-            </List>
+            <MessageList messages={messages} />
           </Box>
           {/* Input field for the user's message */}
           <form onSubmit={handleSendMessage}>
