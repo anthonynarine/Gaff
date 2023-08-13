@@ -3,7 +3,7 @@ import PrimaryAppBar from "../scaffold/PrimaryAppBar/PrimaryAppBar";
 import PrimaryDraw from "../scaffold/PrimaryDraw";
 import SecondaryDraw from "../scaffold/SecondaryDraw";
 import Main from "../scaffold/Main";
-import MessageInterface from "../components/Main/MessageInterface";
+import MessageInterface from "../components/Main/Messages/MessageInterface";
 import ServerChannels from "../components/SecondaryDraw/ServerChannels";
 import UserServers from "../components/PrimaryDraw/UserServers";
 import { useNavigate, useParams } from "react-router";

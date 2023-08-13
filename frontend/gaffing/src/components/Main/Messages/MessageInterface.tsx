@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import {
-  Typography,
-  Box,
-  Button,
-} from "@mui/material";
-import useCrud from "../../hooks/useCruds";
-import Server from "../../pages/Server";
+import { Typography, Box, Button, TextField } from "@mui/material";
+import useCrud from "../../../hooks/useCruds";
+import Server from "../../../pages/Server";
 import { useTheme } from "@mui/material";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
@@ -66,14 +62,22 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
     ]);
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendJsonMessage({ type: "message", message: inputMessage });
+      setInputMessage(""); // Clear the input after sending the message
+    }
+  };
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputMessage(e.target.value);
+    setInputMessage(e.target.value); // Update the input message state
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     sendJsonMessage({ type: "message", message: inputMessage });
-    setInputMessage("");
+    setInputMessage(""); // Clear the input after sending the message
   };
 
   return (
@@ -100,15 +104,22 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
             <MessageList messages={messages} />
           </Box>
           {/* Input field for the user's message */}
-          <form onSubmit={handleSendMessage}>
-            <label>
-              Enter Message:
-              <input type="text" value={inputMessage} onChange={handleMessageChange} />
-            </label>
-            <Button sx={classes.submitBtn} type="submit">
-              Send Message
-            </Button>
-          </form>
+          <Box sx={classes.msgInterfaceFormBox}>
+            <form onSubmit={handleSendMessage} style={classes.msgInterfaceForm}>
+              <Box>
+                <TextField
+                  fullWidth
+                  multiline
+                  minRows={1}
+                  maxRows={4}
+                  sx={{ flexGrow: 1 }}
+                  value={inputMessage}
+                  onKeyDown={handleKeyDown}
+                  onChange={handleMessageChange}
+                />
+              </Box>
+            </form>
+          </Box>
         </>
       )}
     </>

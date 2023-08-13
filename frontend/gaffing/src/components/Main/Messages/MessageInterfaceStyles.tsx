@@ -1,5 +1,6 @@
 import { Theme } from "@mui/material/styles";
 
+
 export const MessageInterfaceStyles = (theme: Theme) => ({
   messageInterfaceNoChannelSelectedBox: {
     overflow: "hidden",
@@ -51,5 +52,17 @@ export const MessageInterfaceStyles = (theme: Theme) => ({
     height: theme.primaryAppBar.height,
     display: "flex",
     alignItems: "center"
-  }, 
+  },
+  msgInterfaceFormBox: {
+    position:"sticky", 
+    bottom: 0, 
+    width: "100%"
+  },
+  msgInterfaceForm: {
+    bottom: 0,
+    right: 0,
+    padding: "1rem",
+    backgroundColor: theme.palette.background.default,
+    zIndex: 1, 
+  }
 });

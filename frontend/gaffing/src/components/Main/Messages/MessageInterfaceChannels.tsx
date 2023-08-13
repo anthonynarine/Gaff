@@ -8,17 +8,17 @@ import {
   IconButton,
   Drawer,
   useTheme,
-  ListItem,
+
 } from "@mui/material";
 
-import { MEDIA_URL } from "../../config";
-import { Server } from "../../@types/server";
+import { MEDIA_URL } from "../../../config";
+import { Server } from "../../../@types/server";
 import { useParams } from "react-router-dom";
-import ServerChannels from "../SecondaryDraw/ServerChannels";
+import ServerChannels from "../../SecondaryDraw/ServerChannels";
 import MoreVertIccon from "@mui/icons-material/MoreVert";
 import { MessageInterfaceStyles } from "./MessageInterfaceStyles";
-import getChannelNameFromData from "../../helper/getChannelNameFromData";
-import { useResponsiveDrawer } from "../../hooks/useResponsiveDrawer";
+import getChannelNameFromData from "../../../helper/getChannelNameFromData";
+import { useResponsiveDrawer } from "../../../hooks/useResponsiveDrawer";
 
 interface ServerChannelProps {
   data: Server[];
