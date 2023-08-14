@@ -6,10 +6,10 @@ import {
   Avatar,
   ListItemText,
   Typography,
-  Box,
 } from "@mui/material";
 
 import Scroll from "./Scroll";
+import { FormatTimeStamp } from "./FormatTimeStamp";
 
 /**
  * Represents a single message.
@@ -37,52 +37,58 @@ interface MessageListProps {
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   return (
     <Scroll>
-    <List>
-      {messages.map((msg: Message) => (
-        <ListItem key={msg.id} alignItems="flex-start">
-          <ListItemAvatar>
-            <Avatar alt="user image" />
-          </ListItemAvatar>
-          <ListItemText
-            // Styling for the primary message content (sender)
-            primaryTypographyProps={{ fontSize: "12px", variant: "body2" }}
-            primary={
-              <Typography
-                component="span"
-                variant="body1"
-                color="text.primary"
-                sx={{ display: "inline", fontWeight: 600 }}
-              >
-                {msg.sender}
-              </Typography>
-            }
-            secondary={
-              <>
-                {/* Styling for the secondary message content (message content) */}
-                <Typography
-                  variant="body1"
-                  component="span"
-                  color="text.primary"
-                  style={{
-                    overflow: "visible",
-                    whiteSpace: "normal",
-                    textOverflow: "clip",
-                  }}
-                  sx={{
-                    display: "inline",
-                    lineHeight: 1.2,
-                    fontWeight: 400,
-                    letterSpacing: "-0.2px",
-                  }}
-                >
-                  {msg.content}
-                </Typography>
-              </>
-            }
-          ></ListItemText>
-        </ListItem>
-      ))}
-    </List>
+      <List>
+        {messages.map((msg: Message) => (
+          <ListItem key={msg.id} alignItems="flex-start">
+            <ListItemAvatar>
+              <Avatar alt="user image" />
+            </ListItemAvatar>
+            <ListItemText
+              // Styling for the primary message content (sender)
+              primaryTypographyProps={{ fontSize: "12px", variant: "body2" }}
+              primary={
+                <React.Fragment>
+                  <Typography
+                    component="span"
+                    variant="body1"
+                    color="text.primary"
+                    sx={{ display: "inline", fontWeight: 600 }}
+                  >
+                    {msg.sender}
+                  </Typography>
+                  <Typography component="span" variant="caption" color="textSecondary">
+                    {" "}
+                    {FormatTimeStamp(msg.timestamp)}
+                  </Typography>
+                </React.Fragment>
+              }
+              secondary={
+                <React.Fragment>
+                  {/* Styling for the secondary message content (message content) */}
+                  <Typography
+                    variant="body1"
+                    component="span"
+                    color="text.primary"
+                    style={{
+                      overflow: "visible",
+                      whiteSpace: "normal",
+                      textOverflow: "clip",
+                    }}
+                    sx={{
+                      display: "inline",
+                      lineHeight: 1.2,
+                      fontWeight: 400,
+                      letterSpacing: "-0.2px",
+                    }}
+                  >
+                    {msg.content}
+                  </Typography>
+                </React.Fragment>
+              }
+            ></ListItemText>
+          </ListItem>
+        ))}
+      </List>
     </Scroll>
   );
 };

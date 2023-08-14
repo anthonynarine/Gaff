@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import { Typography, Box, Button, TextField } from "@mui/material";
+import { Typography, Box, TextField } from "@mui/material";
 import useCrud from "../../../hooks/useCruds";
 import Server from "../../../pages/Server";
 import { useTheme } from "@mui/material";
