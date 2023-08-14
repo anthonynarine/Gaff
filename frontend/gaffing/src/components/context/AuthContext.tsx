@@ -5,7 +5,7 @@ import { useAuthService } from "../../services/AuthServices";
 
 // Creating a React context for the authentication service. The context will have a value 
 // that matches the shape of AuthServiceProps or will be null.
-const AuthServiceContext = createContext<AuthServiceProps | null>(null);
+const AuthContext = createContext<AuthServiceProps | null>(null);
 
 /**
  * Defines the properties required by AuthServiceProvider.
@@ -33,9 +33,9 @@ export function AuthServiceProvider({ children }: AuthServiceProviderProps) {
     // Return a context provider with the value set to the authentication services. 
     // Any child component wrapped by this provider can access the provided context.
     return (
-        <AuthServiceContext.Provider value={authServices}>
+        <AuthContext.Provider value={authServices}>
             {children}
-        </AuthServiceContext.Provider>
+        </AuthContext.Provider>
     );
 }
 
@@ -46,14 +46,14 @@ export function AuthServiceProvider({ children }: AuthServiceProviderProps) {
  * 
  * @returns The context value which should match the shape of `AuthServiceProps`.
  */
-export function useAuthServiceContext(): AuthServiceProps {
+export function useAuthContext(): AuthServiceProps {
     // Use the `useContext` hook to access the value from `AuthServiceContext`.
-    const context = useContext(AuthServiceContext);
+    const context = useContext(AuthContext);
     
     // If the context value is null, it implies that this hook is being used outside of the 
     // `AuthServiceProvider`, which is not allowed.
     if (context === null) {
-        throw new Error("useAuthServiceContext must be used within an AuthServiceProvider");
+        throw new Error("useAutheContext must be used within an AuthServiceProvider");
     }
 
     // Return the authentication service context.

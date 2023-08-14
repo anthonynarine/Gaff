@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from .models import Category, Server
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .serializer import ServerSerializer, CategorySerializer
+from .serializers import ServerSerializer, CategorySerializer
 from rest_framework.response import Response
 from django.db.models import Count
 from .schema import server_list_docs

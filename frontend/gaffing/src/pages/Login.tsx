@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useAuthServiceContext } from "../components/context/AuthContext";
+import { useAuthContext } from "../components/context/AuthContext";
 
 const Login = () => {
-  const { login } = useAuthServiceContext();
+  const { login } = useAuthContext();
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {

@@ -1,4 +1,5 @@
 import imp
+from xml.dom import UserDataHandler
 from django.contrib import admin
 from django.db import router
 from django.urls import path
@@ -25,6 +26,7 @@ router = DefaultRouter()
 router.register("api/server/select", ServerListViewSet)
 router.register("api/server/category", CategoryListViewSet)
 router.register("api/message", MessageViewSet, basename="message")
+router.register("api/account", AccountViewSet, basename="accounts")
 
 
 urlpatterns = [
