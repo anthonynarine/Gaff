@@ -9,6 +9,8 @@ import {
   Box,
 } from "@mui/material";
 
+import Scroll from "./Scroll";
+
 /**
  * Represents a single message.
  */
@@ -34,6 +36,7 @@ interface MessageListProps {
  */
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   return (
+    <Scroll>
     <List>
       {messages.map((msg: Message) => (
         <ListItem key={msg.id} alignItems="flex-start">
@@ -54,7 +57,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
               </Typography>
             }
             secondary={
-              <Box>
+              <>
                 {/* Styling for the secondary message content (message content) */}
                 <Typography
                   variant="body1"
@@ -74,12 +77,13 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                 >
                   {msg.content}
                 </Typography>
-              </Box>
+              </>
             }
           ></ListItemText>
         </ListItem>
       ))}
     </List>
+    </Scroll>
   );
 };
 

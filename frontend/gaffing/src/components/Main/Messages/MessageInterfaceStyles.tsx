@@ -1,6 +1,5 @@
 import { Theme } from "@mui/material/styles";
 
-
 export const MessageInterfaceStyles = (theme: Theme) => ({
   messageInterfaceNoChannelSelectedBox: {
     overflow: "hidden",
@@ -14,11 +13,6 @@ export const MessageInterfaceStyles = (theme: Theme) => ({
   listItemAvatarBox: {
     display: {xs: "block", sm: "none"}
 
-  },
-  renderMessageBox: {
-    overflow: "hidden",
-    p: 0,
-    height: `calc(100vh -100px)`,
   },
   renderMessageList:{
     width: "100%",
@@ -53,16 +47,16 @@ export const MessageInterfaceStyles = (theme: Theme) => ({
     display: "flex",
     alignItems: "center"
   },
-  msgInterfaceFormBox: {
+  msgFormBox: {
     position:"sticky", 
     bottom: 0, 
-    width: "100%"
+    width: "102%"
   },
-  msgInterfaceForm: {
+  msgForm: {
     bottom: 0,
-    right: 0,
+    right: 0, 
     padding: "1rem",
     backgroundColor: theme.palette.background.default,
     zIndex: 1, 
-  }
+  },
 });

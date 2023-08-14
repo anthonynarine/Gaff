@@ -70,14 +70,12 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
     }
   };
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputMessage(e.target.value); // Update the input message state
-  };
-
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    sendJsonMessage({ type: "message", message: inputMessage });
-    setInputMessage(""); // Clear the input after sending the message
+    if (inputMessage.trim() !== "") {
+      sendJsonMessage({ type: "message", message: inputMessage });
+      setInputMessage("");
+    }
   };
 
   return (
@@ -100,22 +98,23 @@ const MessageInterface: React.FC<ServerChannelProps> = ({ data }) => {
       ) : (
         <>
           {/* Render each received message */}
-          <Box sx={classes.renderMessageBox}>
+          <Box sx={{overflow: "hidden", p:0, height:`calc(100vh - 100px)`}}>
             <MessageList messages={messages} />
           </Box>
           {/* Input field for the user's message */}
-          <Box sx={classes.msgInterfaceFormBox}>
-            <form onSubmit={handleSendMessage} style={classes.msgInterfaceForm}>
-              <Box>
+          {/* <Box sx={{position: "sticky", bottom:0, width:"100%"}}> */}
+          <Box sx={classes.msgFormBox}>
+            <form onSubmit={handleSendMessage} style={classes.msgForm}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ paddingRight: '10px' }}>
                 <TextField
                   fullWidth
                   multiline
                   minRows={1}
                   maxRows={4}
-                  sx={{ flexGrow: 1 }}
-                  value={inputMessage}
+                  sx={{ flexGrow: 1, pr:"10px" }}
                   onKeyDown={handleKeyDown}
-                  onChange={handleMessageChange}
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
                 />
               </Box>
             </form>
