@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework",
     "corsheaders",
+    "rest_framework_simplejwt",
 ]
 
 CORS_ALLOWED_ORIGINS = [

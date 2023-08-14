@@ -47,8 +47,3 @@ if settings.DEBUG:
 
 
 
-urlpatterns = [
-    ...
-   
-    ...
-]
