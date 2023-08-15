@@ -3,6 +3,7 @@ from xml.dom import UserDataHandler
 from django.contrib import admin
 from django.db import router
 from django.urls import path
+from account.views import AccountViewSet
 from server.views import ServerListViewSet, CategoryListViewSet
 
 #drf-spectacular

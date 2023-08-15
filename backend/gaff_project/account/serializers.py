@@ -4,4 +4,4 @@ from rest_framework import serializers
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = "username"
+        fields =[ "username", "id"]
