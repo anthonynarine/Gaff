@@ -6,6 +6,8 @@ import ToggleColorMode from "./components/Color/ToggleColorMode";
 import Server from "./pages/Server";
 import Login from "./pages/Login";
 import { AuthServiceProvider } from "./components/context/AuthContext";
+import TestLogin from "./pages/TestLogin";
+import ProtectedRoute from "./services/ProtectedRoute";
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
             {/* the ? makes is optional without it will expect a property */}
             <Route path="/explore/:categoryName" element={<Explore />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/testlogin" element={<ProtectedRoute><TestLogin /></ProtectedRoute>} />
           </Routes>
         </ToggleColorMode>
       </AuthServiceProvider>

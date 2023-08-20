@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AuthServiceProps } from "../@types/auth-service";
 import { getUserIdFromToken } from "./getUserIdFromToken";
+import { useState } from "react";
 
 export function useAuthService(): AuthServiceProps {
   /**
@@ -10,27 +11,36 @@ export function useAuthService(): AuthServiceProps {
    * @returns {string} - Returns the user_id extracted from the token payload.
    */
 
+  const [isLoggedIn, setIsloggedIn] = useState<boolean>(() => {
+    const loggedIn = localStorage.getItem("isLoggedIn")
+    if (loggedIn !== null) {
+      return Boolean(loggedIn)
+    }else {
+      return false;
+    }
+  });
+
   const getUserDetails = async () => {
-    
     try {
       const userId = localStorage.getItem("userId");
-      const accessToken = localStorage.getItem("access_token")
-
+      const accessToken = localStorage.getItem("access_token");
 
       const response = await axios.get(
-        `http://localhost:8000/api/account/?user_id=${userId}`, {
-            headers: {
+        `http://localhost:8000/api/account/?user_id=${userId}`,
+        {
+          headers: {
             Authorization: `Bearer ${accessToken}`,
-            }
+          },
         }
       );
-      const userDetails = response.data
+      const userDetails = response.data;
       localStorage.setItem("username", userDetails);
+      setIsloggedIn(true);
+
       console.log("username => ", userDetails.username);
     } catch (error) {
       console.log("Error fetching user details", error);
     }
-    
   };
 
   const login = async (username: string, password: string) => {
@@ -39,6 +49,7 @@ export function useAuthService(): AuthServiceProps {
         username,
         password,
       });
+
       const { access, refresh } = response.data;
 
       const userId = getUserIdFromToken(access);
@@ -46,13 +57,20 @@ export function useAuthService(): AuthServiceProps {
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
       localStorage.setItem("userId", userId);
-      getUserDetails()
+      localStorage.setItem("isLoggedIn", "true");
+
+      await getUserDetails();
+
+
       console.log("AUTH DATA =>", response);
-    } catch (error) {
-      return error;
+      return true
+    } catch (error: unknown) {
+      setIsloggedIn(false);
+      localStorage.setItem("isLoggedIn", "false");
+      console.log("Error during login:", error)
+      return false;
     }
   };
 
-  return { login, getUserDetails };
+  return { login, isLoggedIn, getUserDetails };
 }
-

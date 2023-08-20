@@ -11,12 +11,20 @@ const Login = () => {
       password: "",
     },
     onSubmit: async (values) => {
-        const { username, password } = values;
-        const response = await login(username, password);
-        if (response){
-            console.log(response);
-            navigate("/")
+      const { username, password } = values;
+
+      try {
+        console.log(username, password)
+        const success = await login(username, password);
+        if (success) {
+          console.log(success);
+          navigate("/testlogin");
+        } else {
+          console.log("Login failed");
         }
+      } catch (error) {
+        console.error("An error occurred during login:", error);
+      }
     },
   });
   return (
@@ -40,6 +48,7 @@ const Login = () => {
           onChange={formik.handleChange}
         ></input>
         <button type="submit">Submit</button>
+        {/* <button onClick={() => navigate("/")}>Test Navigate</button> */}
       </form>
     </>
   );
