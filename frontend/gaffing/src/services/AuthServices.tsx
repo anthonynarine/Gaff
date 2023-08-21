@@ -11,14 +11,12 @@ export function useAuthService(): AuthServiceProps {
    * @returns {string} - Returns the user_id extracted from the token payload.
    */
 
-  const [isLoggedIn, setIsloggedIn] = useState<boolean>(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn")
-    if (loggedIn !== null) {
-      return Boolean(loggedIn)
-    }else {
-      return false;
-    }
-  });
+  const getInitialLoggedInValue = () => {
+    const loggedIn = localStorage.getItem("isLoggedIn");
+    return loggedIn !== null && loggedIn == "true";
+  };
+
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(getInitialLoggedInValue());
 
   const getUserDetails = async () => {
     try {
@@ -34,8 +32,8 @@ export function useAuthService(): AuthServiceProps {
         }
       );
       const userDetails = response.data;
-      localStorage.setItem("username", userDetails);
-      setIsloggedIn(true);
+      localStorage.setItem("username", userDetails.username);
+      setIsLoggedIn(true);
 
       console.log("username => ", userDetails.username);
     } catch (error) {
@@ -61,16 +59,24 @@ export function useAuthService(): AuthServiceProps {
 
       await getUserDetails();
 
-
       console.log("AUTH DATA =>", response);
-      return true
+      return true;
     } catch (error: unknown) {
-      setIsloggedIn(false);
+      setIsLoggedIn(false);
       localStorage.setItem("isLoggedIn", "false");
-      console.log("Error during login:", error)
+      console.log("Error during login:", error);
       return false;
     }
   };
 
-  return { login, isLoggedIn, getUserDetails };
+  const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+    localStorage.setItem("isLoggedIn", "false");
+    setIsLoggedIn(false);
+  };
+
+  return { login, isLoggedIn, getUserDetails, logout };
 }

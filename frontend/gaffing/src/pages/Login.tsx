@@ -14,7 +14,7 @@ const Login = () => {
       const { username, password } = values;
 
       try {
-        console.log(username, password)
+        // console.log("Username + Password =>", username, password)
         const success = await login(username, password);
         if (success) {
           console.log(success);
