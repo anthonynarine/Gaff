@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from .serializers import AccountSerializer
 from .schemas import user_list_docs
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 
@@ -42,3 +43,13 @@ class AccountViewSet(viewsets.ViewSet):
         
         # Returning serialized account data
         return Response(serializer.data)
+    
+class JWTSetCookieMixin:
+    def finalize_response(self, request, response, *args, **kwargs):  # Notice the corrected name here
+        token = response.data.get("refresh")
+        print(token)
+        return super().finalize_response(request, response, *args, **kwargs)
+
+    
+class JWTCookieTokenObtainView(JWTSetCookieMixin, TokenObtainPairView):
+    pass
