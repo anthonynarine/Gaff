@@ -25,10 +25,36 @@ const useAxiosWithInterceptor = (): AxiosInstance => {
       return response;
     },
     async (error) => {
+      const originalRequest = error.config;
       // If the response status is 401 (Unauthorized), redirect the user to the home page.
-      if (error.response?.status === 401) {
-        const goHome = () => navigate("/");
-        goHome();
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        const refreshToken = localStorage.getItem("refresh_token");
+        if (refreshToken) {
+          try {
+            const refreshResponse = await axios.post(
+              "http://127.0.0.1:8000/api/token/refresh/",
+              {
+                refresh: refreshToken,
+              }
+            );
+            const newAccessToken = refreshResponse.data.access;
+            const newRefreshToken = refreshResponse.data.refresh;
+
+            localStorage.setItem("access_token", newAccessToken)
+            originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+            
+            if (refreshResponse.data.refresh) {
+              localStorage.setItem("refresh_token", newRefreshToken)
+            }
+            
+            return jwtAxios(originalRequest);
+          } catch (refreshError) {
+            navigate("/login");
+            throw refreshError
+          }
+        } else {
+          navigate("/login")
+        }
       }
     }
   );
@@ -38,4 +64,3 @@ const useAxiosWithInterceptor = (): AxiosInstance => {
 };
 
 export default useAxiosWithInterceptor;
-
