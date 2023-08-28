@@ -46,7 +46,7 @@ class AccountViewSet(viewsets.ViewSet):
     
 class JWTSetCookieMixin:
     def finalize_response(self, request, response, *args, **kwargs):  # Notice the corrected name here
-        response.set_cookie("hello", "hello", samesite="Lax")
+        response.set_cookie("hello", "hello", domain='127.0.0.1', path='/', samesite='Lax')
         return super().finalize_response(request, response, *args, **kwargs)
 
     

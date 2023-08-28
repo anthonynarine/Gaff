@@ -29,6 +29,7 @@ export function useAuthService(): AuthServiceProps {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+          withCredentials: true 
         }
       );
       const userDetails = response.data;
@@ -46,6 +47,8 @@ export function useAuthService(): AuthServiceProps {
       const response = await axios.post("http://127.0.0.1:8000/api/token/", {
         username,
         password,
+      }, {
+        withCredentials: true
       });
 
       const { access, refresh } = response.data;
