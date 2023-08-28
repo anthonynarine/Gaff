@@ -1,6 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
 import os
+from re import T
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +14,6 @@ DEBUG = os.environ.get("DEBUG")
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -37,10 +37,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -140,12 +137,25 @@ SPECTACULAR_SETTINGS = {
 }
 
 
+# CORS_ALLOWED_ORIGINS = [
+#     "http://127.0.0.1:5173",
+#     "http://localhost:3000",
+# ]
+
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True  
+# WHEN SET TO T ALLOWS COOKIES TO BE INCLUDED IN REQUEST FROM FE APPLICATIONS 
+# TO YOUR DJANGO BACKEND, PROVIED THE FE ALSO SETS THE withCredentials ATTRIBUTE TO T
+
+
 # ....ADDED ....
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 # ...ADDED...
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=5),  #TESTING TIMER
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),  #TESTING TIMER
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,

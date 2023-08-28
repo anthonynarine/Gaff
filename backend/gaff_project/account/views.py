@@ -35,7 +35,7 @@ class AccountViewSet(viewsets.ViewSet):
         # Extracting user_id from the request's query parameters
         user_id = request.query_params.get("user_id")
         
-        # Filtering the account based on provided user_id
+        # query the db for account based on provided user_id
         queryset = self.queryset.get(id=user_id)
         
         # Serializing the fetched account object
@@ -46,10 +46,21 @@ class AccountViewSet(viewsets.ViewSet):
     
 class JWTSetCookieMixin:
     def finalize_response(self, request, response, *args, **kwargs):  # Notice the corrected name here
-        token = response.data.get("refresh")
-        print(token)
+        response.set_cookie("hello", "hello", samesite="Lax")
         return super().finalize_response(request, response, *args, **kwargs)
 
     
 class JWTCookieTokenObtainView(JWTSetCookieMixin, TokenObtainPairView):
     pass
+
+
+
+
+
+#                       Mixins
+"""
+Sure, mixins are a way in object-oriented programming to share methods
+among different classes without resorting to inheritance from a base or
+parent class. In Django, mixins are often used with class-based views 
+to provide specific functionalities that can be combined or mixed 
+in with other views."""
