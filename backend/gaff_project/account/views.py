@@ -9,52 +9,76 @@ from .serializers import AccountSerializer
 from .schemas import user_list_docs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from django.conf import settings
 
 
 class AccountViewSet(viewsets.ViewSet):
     """
     ViewSet for handling Account related operations.
     """
-    
+
     # Default queryset for fetching Account objects
     queryset = Account.objects.all()
     permission_classes = [IsAuthenticated]
-    
+
     @user_list_docs
     def list(self, request):
         """
         List an account based on user_id.
-        
+
         Parameters:
         - request: HTTP request object containing query parameters.
-        
+
         Returns:
         - HTTP Response containing serialized account data.
         """
         # Extracting user_id from the request's query parameters
         user_id = request.query_params.get("user_id")
-        
+
         # query the db for account based on provided user_id
         queryset = self.queryset.get(id=user_id)
-        
+
         # Serializing the fetched account object
         serializer = AccountSerializer(queryset)
-        
+
         # Returning serialized account data
         return Response(serializer.data)
-    
+
+
 class JWTSetCookieMixin:
-    def finalize_response(self, request, response, *args, **kwargs):  # Notice the corrected name here
-        response.set_cookie("hello", "hello", domain='127.0.0.1', path='/', samesite='Lax')
+    def finalize_response(
+        self, request, response, *args, **kwargs
+    ):  # Notice the corrected name here
+        if response.data.get("refresh"):
+            response.set_cookie(
+                settings.SIMPLE_JWT["REFRESH_TOKEN_NAME"],
+                response.data["refresh"],
+                max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
+                httponly=True,
+                samesite=settings.SIMPLE_JWT["JWT_COOKIE_SAMESITE"],
+            )
+
+        response.set_cookie(
+            "hello", "hello", domain="127.0.0.1", path="/", samesite="Lax"
+        )
+        if response.data.get("access"):
+            response.set_cookie(
+                settings.SIMPLE_JWT["ACCESS_TOKEN_NAME"],
+                response.data["access"],
+                max_age=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+                httponly=True,
+                samesite=settings.SIMPLE_JWT["JWT_COOKIE_SAMESITE"],
+            )
+
+        response.set_cookie(
+            "test", "meLikeCookie", domain="127.0.0.1", path="/", samesite="Lax"
+        )
+
         return super().finalize_response(request, response, *args, **kwargs)
 
-    
+
 class JWTCookieTokenObtainView(JWTSetCookieMixin, TokenObtainPairView):
     pass
-
-
-
 
 
 #                       Mixins
